@@ -10,11 +10,21 @@ export interface DecisionOption {
   };
 }
 
+export interface VoteTrend {
+  date: string;
+  votes: {
+    optionId: string;
+    count: number;
+  }[];
+}
+
 export interface Decision {
   id: string;
   title: string;
   description: string;
   options: DecisionOption[];
+  voteResults?: Record<string, number>;
+  voteTrends?: VoteTrend[];
   deadline: string;
   status: 'active' | 'ended' | 'draft';
   isPublic: boolean;
@@ -31,14 +41,6 @@ export interface Vote {
   optionId: string;
   createdAt: string;
   isAnonymous: boolean;
-}
-
-export interface VoteTrend {
-  date: string;
-  votes: {
-    optionId: string;
-    count: number;
-  }[];
 }
 
 export interface Template {

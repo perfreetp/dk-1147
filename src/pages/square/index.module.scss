@@ -119,16 +119,61 @@
   background: rgba($color-primary, 0.05);
 }
 
+.optionVoted {
+  border-color: $color-success;
+  background: rgba($color-success, 0.05);
+}
+
+.optionTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.optionTitleRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
 .optionTitle {
   font-size: $font-size-md;
   font-weight: $font-weight-medium;
   color: $color-text-primary;
-  margin-bottom: $spacing-xs;
+}
+
+.optionVotes {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.voteBar {
+  height: 8rpx;
+  background: $color-border;
+  border-radius: 4rpx;
+  margin-bottom: $spacing-sm;
+  overflow: hidden;
+}
+
+.voteProgress {
+  height: 100%;
+  background: linear-gradient(90deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
 }
 
 .optionMeta {
   font-size: $font-size-xs;
   color: $color-text-tertiary;
+}
+
+.votedBadge {
+  background: rgba($color-success, 0.1);
+  padding: 2rpx 8rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  color: $color-success;
 }
 
 .voteButton {
@@ -146,7 +191,7 @@
   }
 }
 
-.voteButton:disabled {
+.voteButtonDisabled {
   background: $color-bg-hover;
   box-shadow: none;
 }
@@ -157,11 +202,11 @@
   color: $color-text-white;
 }
 
-.voteButton:disabled .voteButtonText {
+.voteButtonDisabled .voteButtonText {
   color: $color-text-disabled;
 }
 
-.votedBadge {
+.votedBadgeLarge {
   @include flex-center;
   height: $button-height-md;
   background: rgba($color-success, 0.1);
@@ -172,4 +217,29 @@
   font-size: $font-size-md;
   font-weight: $font-weight-semibold;
   color: $color-success;
+}
+
+.emptyState {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-xl;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+}
+
+.emptyIcon {
+  font-size: 80rpx;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+}
+
+.emptySubText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
 }

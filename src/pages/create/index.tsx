@@ -74,11 +74,18 @@ const CreatePage: React.FC = () => {
       cons: opt.cons.split('、').filter(c => c.trim())
     }));
 
+    const voteResults: Record<string, number> = {};
+    decisionOptions.forEach(opt => {
+      voteResults[opt.id] = 0;
+    });
+
     const newDecision: Decision = {
       id: `decision_${Date.now()}`,
       title: title.trim(),
       description: description.trim(),
       options: decisionOptions,
+      voteResults,
+      voteTrends: [],
       deadline,
       status: 'active',
       isPublic,

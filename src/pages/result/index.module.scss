@@ -4,7 +4,13 @@
   min-height: 100vh;
   background: $color-bg-page;
   padding: $spacing-lg;
-  padding-bottom: 180rpx;
+  padding-bottom: 220rpx;
+}
+
+.loadingText {
+  text-align: center;
+  color: $color-text-tertiary;
+  padding: $spacing-xl;
 }
 
 .decisionInfo {
@@ -15,11 +21,29 @@
   box-shadow: $shadow-card;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+}
+
 .title {
   font-size: $font-size-xl;
   font-weight: $font-weight-bold;
   color: $color-text-primary;
-  margin-bottom: $spacing-sm;
+  flex: 1;
+}
+
+.statusBadge {
+  background: rgba($color-success, 0.1);
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+}
+
+.statusText {
+  font-size: $font-size-xs;
+  color: $color-success;
 }
 
 .description {
@@ -59,13 +83,20 @@
 
 .optionResult {
   background: $color-bg-page;
+  border: 2rpx solid $color-border;
   border-radius: $radius-md;
   padding: $spacing-md;
   margin-bottom: $spacing-md;
+  transition: all $transition-base;
 
-  &:last-child {
-    margin-bottom: 0;
+  &:active {
+    opacity: 0.8;
   }
+}
+
+.optionSelected {
+  border-color: $color-primary;
+  background: rgba($color-primary, 0.05);
 }
 
 .optionHeader {
@@ -73,6 +104,17 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: $spacing-sm;
+}
+
+.optionTitleRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.selectedMark {
+  color: $color-primary;
+  font-weight: $font-weight-bold;
 }
 
 .optionTitle {
@@ -105,7 +147,6 @@
 .prosCons {
   display: flex;
   gap: $spacing-md;
-  margin-top: $spacing-sm;
 }
 
 .prosList,
@@ -135,41 +176,117 @@
   line-height: $line-height-normal;
 }
 
-.scoreGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.trendContainer {
+  display: flex;
+  flex-direction: column;
   gap: $spacing-md;
-  margin-bottom: $spacing-lg;
 }
 
-.scoreItem {
-  text-align: center;
+.trendItem {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.trendDate {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+  display: block;
+}
+
+.trendVotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.trendVoteItem {
+  background: $color-bg-card;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+}
+
+.trendOptionName {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.scoreHint {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-md;
+  display: block;
+}
+
+.scoreCard {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.scoreCardTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: block;
+}
+
+.scoreRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .scoreLabel {
   font-size: $font-size-sm;
   color: $color-text-secondary;
-  margin-bottom: $spacing-xs;
-  display: block;
+}
+
+.scoreControls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.scoreButton {
+  @include button-reset;
+  @include flex-center;
+  width: 64rpx;
+  height: 64rpx;
+  background: $color-primary;
+  border-radius: $radius-sm;
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.95);
+  }
+}
+
+.scoreButtonText {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
 }
 
 .scoreValue {
   font-size: $font-size-xl;
   font-weight: $font-weight-bold;
   color: $color-primary;
-  display: block;
-}
-
-.decisionSection {
-  margin-bottom: $spacing-lg;
-}
-
-.decisionLabel {
-  font-size: $font-size-md;
-  font-weight: $font-weight-medium;
-  color: $color-text-primary;
-  margin-bottom: $spacing-sm;
-  display: block;
+  min-width: 48rpx;
+  text-align: center;
 }
 
 .decisionOptions {
@@ -203,6 +320,32 @@
   display: block;
 }
 
+.satisfactionDisplay {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.satisfactionLabel {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.starsContainer {
+  display: flex;
+  gap: 4rpx;
+}
+
+.starFilled {
+  font-size: $font-size-lg;
+  color: $color-warning;
+}
+
+.starEmpty {
+  font-size: $font-size-lg;
+  color: $color-border;
+}
+
 .bottomBar {
   position: fixed;
   bottom: 0;
@@ -213,18 +356,20 @@
   box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.08);
   z-index: 100;
   display: flex;
-  gap: $spacing-md;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
 }
 
 .actionButton {
   @include button-reset;
   @include flex-center;
   flex: 1;
-  height: $button-height-lg;
+  height: $button-height-md;
   border-radius: $radius-button;
   font-size: $font-size-md;
   font-weight: $font-weight-semibold;
   transition: all $transition-base;
+  min-width: 180rpx;
 
   &:active {
     opacity: 0.9;
@@ -242,6 +387,12 @@
   background: $color-bg-page;
   border: 2rpx solid $color-primary;
   color: $color-primary;
+}
+
+.saveButton {
+  background: linear-gradient(135deg, $color-success 0%, #34d399 100%);
+  color: $color-text-white;
+  box-shadow: 0 4rpx 16rpx rgba($color-success, 0.3);
 }
 
 .modal {
@@ -274,20 +425,41 @@
   display: block;
 }
 
-.closeButton {
+.modalButton {
   @include button-reset;
+  @include flex-center;
+  width: 100%;
+  height: $button-height-md;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-button;
+  margin-top: $spacing-lg;
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.modalButtonText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.modalCancelButton {
+  @include button-reset;
+  @include flex-center;
   width: 100%;
   height: $button-height-md;
   background: $color-bg-page;
   border-radius: $radius-button;
-  margin-top: $spacing-md;
+  margin-top: $spacing-sm;
 
   &:active {
     opacity: 0.8;
   }
 }
 
-.closeButtonText {
+.modalCancelText {
   font-size: $font-size-md;
   color: $color-text-secondary;
 }

@@ -19,13 +19,20 @@ export const mockDecisions: Decision[] = [
         cons: ['人多', '费钱']
       }
     ],
+    voteResults: {
+      opt1: 8,
+      opt2: 7
+    },
+    voteTrends: [
+      { date: '2024-12-15', votes: [{ optionId: 'opt1', count: 5 }, { optionId: 'opt2', count: 4 }] },
+      { date: '2024-12-16', votes: [{ optionId: 'opt1', count: 3 }, { optionId: 'opt2', count: 2 }] },
+      { date: '2024-12-17', votes: [{ optionId: 'opt1', count: 0 }, { optionId: 'opt2', count: 1 }] }
+    ],
     deadline: '2024-12-20',
     status: 'active',
     isPublic: true,
     voteCount: 15,
-    createdAt: '2024-12-15',
-    finalChoice: 'opt1',
-    satisfaction: 5
+    createdAt: '2024-12-15'
   },
   {
     id: '2',
@@ -51,6 +58,15 @@ export const mockDecisions: Decision[] = [
         cons: ['麻烦', '累']
       }
     ],
+    voteResults: {
+      opt1: 5,
+      opt2: 2,
+      opt3: 1
+    },
+    voteTrends: [
+      { date: '2024-12-16', votes: [{ optionId: 'opt1', count: 3 }, { optionId: 'opt2', count: 1 }, { optionId: 'opt3', count: 1 }] },
+      { date: '2024-12-17', votes: [{ optionId: 'opt1', count: 2 }, { optionId: 'opt2', count: 1 }, { optionId: 'opt3', count: 0 }] }
+    ],
     deadline: '2024-12-18',
     status: 'active',
     isPublic: false,
@@ -75,13 +91,22 @@ export const mockDecisions: Decision[] = [
         cons: ['太普通']
       }
     ],
+    voteResults: {
+      opt1: 12,
+      opt2: 11
+    },
+    voteTrends: [
+      { date: '2024-12-10', votes: [{ optionId: 'opt1', count: 6 }, { optionId: 'opt2', count: 5 }] },
+      { date: '2024-12-11', votes: [{ optionId: 'opt1', count: 4 }, { optionId: 'opt2', count: 3 }] },
+      { date: '2024-12-12', votes: [{ optionId: 'opt1', count: 2 }, { optionId: 'opt2', count: 3 }] }
+    ],
     deadline: '2024-12-25',
     status: 'ended',
     isPublic: true,
     voteCount: 23,
     createdAt: '2024-12-10',
     finalChoice: 'opt1',
-    satisfaction: 4
+    satisfaction: 5
   }
 ];
 
@@ -133,6 +158,15 @@ export const mockSquareDecisions: Decision[] = [
       { id: 'opt2', title: '包包', pros: ['大牌', '保值'], cons: ['预算可能不够'] },
       { id: 'opt3', title: '首饰', pros: ['好看', '有意义'], cons: ['要挑款式'] }
     ],
+    voteResults: {
+      opt1: 15,
+      opt2: 18,
+      opt3: 9
+    },
+    voteTrends: [
+      { date: '2024-12-17', votes: [{ optionId: 'opt1', count: 8 }, { optionId: 'opt2', count: 10 }, { optionId: 'opt3', count: 5 }] },
+      { date: '2024-12-18', votes: [{ optionId: 'opt1', count: 7 }, { optionId: 'opt2', count: 8 }, { optionId: 'opt3', count: 4 }] }
+    ],
     deadline: '2024-12-22',
     status: 'active',
     isPublic: true,
@@ -146,6 +180,15 @@ export const mockSquareDecisions: Decision[] = [
     options: [
       { id: 'opt1', title: '日本', pros: ['美食多', '购物天堂'], cons: ['签证麻烦'] },
       { id: 'opt2', title: '韩国', pros: ['距离近', '签证简单'], cons: ['购物不比日本便宜'] }
+    ],
+    voteResults: {
+      opt1: 35,
+      opt2: 32
+    },
+    voteTrends: [
+      { date: '2024-12-16', votes: [{ optionId: 'opt1', count: 18 }, { optionId: 'opt2', count: 15 }] },
+      { date: '2024-12-17', votes: [{ optionId: 'opt1', count: 10 }, { optionId: 'opt2', count: 9 }] },
+      { date: '2024-12-18', votes: [{ optionId: 'opt1', count: 7 }, { optionId: 'opt2', count: 8 }] }
     ],
     deadline: '2024-12-28',
     status: 'active',
@@ -161,6 +204,15 @@ export const mockSquareDecisions: Decision[] = [
       { id: 'opt1', title: '跳槽', pros: ['薪资高', '发展好'], cons: ['风险大'] },
       { id: 'opt2', title: '坚持', pros: ['稳定', '熟悉'], cons: ['看不到希望'] }
     ],
+    voteResults: {
+      opt1: 45,
+      opt2: 44
+    },
+    voteTrends: [
+      { date: '2024-12-15', votes: [{ optionId: 'opt1', count: 20 }, { optionId: 'opt2', count: 18 }] },
+      { date: '2024-12-16', votes: [{ optionId: 'opt1', count: 15 }, { optionId: 'opt2', count: 14 }] },
+      { date: '2024-12-17', votes: [{ optionId: 'opt1', count: 10 }, { optionId: 'opt2', count: 12 }] }
+    ],
     deadline: '2024-12-30',
     status: 'active',
     isPublic: true,
@@ -174,6 +226,16 @@ export const mockSquareDecisions: Decision[] = [
     options: [
       { id: 'opt1', title: '买房', pros: ['资产', '归属感'], cons: ['压力大'] },
       { id: 'opt2', title: '租房', pros: ['灵活', '轻松'], cons: ['不稳定'] }
+    ],
+    voteResults: {
+      opt1: 68,
+      opt2: 66
+    },
+    voteTrends: [
+      { date: '2024-12-14', votes: [{ optionId: 'opt1', count: 25 }, { optionId: 'opt2', count: 22 }] },
+      { date: '2024-12-15', votes: [{ optionId: 'opt1', count: 20 }, { optionId: 'opt2', count: 18 }] },
+      { date: '2024-12-16', votes: [{ optionId: 'opt1', count: 15 }, { optionId: 'opt2', count: 16 }] },
+      { date: '2024-12-17', votes: [{ optionId: 'opt1', count: 8 }, { optionId: 'opt2', count: 10 }] }
     ],
     deadline: '2025-01-05',
     status: 'active',

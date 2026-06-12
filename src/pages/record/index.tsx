@@ -33,6 +33,12 @@ const RecordPage: React.FC = () => {
     Taro.switchTab({ url: '/pages/create/index' });
   };
 
+  const getFinalChoiceTitle = (decision: Decision) => {
+    if (!decision.finalChoice) return '未选择';
+    const option = decision.options.find(opt => opt.id === decision.finalChoice);
+    return option?.title || '未知选项';
+  };
+
   return (
     <ScrollView className={styles.page} scrollY>
       <View className={styles.header}>
@@ -50,7 +56,7 @@ const RecordPage: React.FC = () => {
           <Text className={styles.statLabel}>进行中</Text>
         </View>
         <View className={styles.statCard}>
-          <Text className={styles.statNumber}>{avgSatisfaction}</Text>
+          <Text className={styles.statNumber}>{avgSatisfaction || '-'}</Text>
           <Text className={styles.statLabel}>平均满意度</Text>
         </View>
         <View className={styles.statCard}>
@@ -66,11 +72,48 @@ const RecordPage: React.FC = () => {
         {completedDecisions.length > 0 ? (
           <View className={styles.decisionList}>
             {completedDecisions.map(decision => (
-              <DecisionCard
+              <View
                 key={decision.id}
-                decision={decision}
+                className={styles.completedCard}
                 onClick={() => handleDecisionClick(decision.id)}
-              />
+              >
+                <View className={styles.completedHeader}>
+                  <Text className={styles.completedTitle}>{decision.title}</Text>
+                  <View className={styles.completedBadge}>
+                    <Text className={styles.completedBadgeText}>已完成</Text>
+                  </View>
+                </View>
+                {decision.finalChoice && (
+                  <View className={styles.finalChoice}>
+                    <Text className={styles.finalChoiceLabel}>最终选择：</Text>
+                    <Text className={styles.finalChoiceValue}>{getFinalChoiceTitle(decision)}</Text>
+                  </View>
+                )}
+                <View className={styles.completedMeta}>
+                  <Text className={styles.completedMetaText}>
+                    {decision.options.length} 个选项 · {decision.voteCount} 票
+                  </Text>
+                </View>
+                {decision.satisfaction && (
+                  <View className={styles.satisfaction}>
+                    <Text className={styles.satisfactionLabel}>满意度：</Text>
+                    <View className={styles.starsContainer}>
+                      {[1, 2, 3, 4, 5].map(star => (
+                        <Text
+                          key={star}
+                          className={
+                            star <= decision.satisfaction!
+                              ? styles.starFilled
+                              : styles.starEmpty
+                          }
+                        >
+                          ★
+                        </Text>
+                      ))}
+                    </View>
+                  </View>
+                )}
+              </View>
             ))}
           </View>
         ) : (

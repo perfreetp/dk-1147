@@ -6,7 +6,7 @@ import DecisionCard from '../../components/DecisionCard';
 import styles from './index.module.scss';
 
 const HomePage: React.FC = () => {
-  const { decisions } = useAppContext();
+  const { decisions, refreshData } = useAppContext();
   const [activeDecisions, setActiveDecisions] = useState<typeof decisions>([]);
   const [stats, setStats] = useState({ total: 0, active: 0, completed: 0 });
 
@@ -20,6 +20,16 @@ const HomePage: React.FC = () => {
       completed: completed.length
     });
   }, [decisions]);
+
+  useEffect(() => {
+    const unsubscribe = Taro.eventCenter.on('refreshData', () => {
+      refreshData();
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [refreshData]);
 
   const handleCreateDecision = () => {
     Taro.switchTab({ url: '/pages/create/index' });
@@ -91,7 +101,7 @@ const HomePage: React.FC = () => {
           <Text className={styles.sectionTitle}>进行中的决策</Text>
         </View>
         {activeDecisions.length > 0 ? (
-          activeDecisions.slice(0, 3).map(decision => (
+          activeDecisions.map(decision => (
             <DecisionCard
               key={decision.id}
               decision={decision}
