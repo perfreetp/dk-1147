@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Input, ScrollView } from '@tarojs/components';
+import Taro from '@tarojs/taro';
 import { useAppContext } from '../../store/context';
 import styles from './index.module.scss';
 
@@ -7,13 +8,7 @@ const SquarePage: React.FC = () => {
   const { squareDecisions, isVoted, addVote } = useAppContext();
   const [searchValue, setSearchValue] = useState('');
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    const votedInfo = isVoted('');
-    if (votedInfo) {
-      console.info('[Square] User has voted for:', votedInfo.decisionId);
-    }
-  }, [squareDecisions]);
+  const [justVoted, setJustVoted] = useState<string | null>(null);
 
   const filteredDecisions = squareDecisions.filter(d =>
     d.title.includes(searchValue) || d.description.includes(searchValue)
@@ -29,6 +24,11 @@ const SquarePage: React.FC = () => {
   const handleVote = (decisionId: string) => {
     const selectedOptionId = selectedOptions[decisionId];
     if (!selectedOptionId) {
+      Taro.showToast({
+        title: '请先选择一个选项',
+        icon: 'none',
+        duration: 2000
+      });
       return;
     }
 
@@ -38,6 +38,15 @@ const SquarePage: React.FC = () => {
     const selectedOption = decision?.options.find(opt => opt.id === selectedOptionId);
 
     console.info(`[Square] Vote submitted for: ${selectedOption?.title}`);
+
+    setJustVoted(decisionId);
+    setTimeout(() => setJustVoted(null), 2000);
+
+    Taro.showToast({
+      title: '投票成功！',
+      icon: 'success',
+      duration: 1500
+    });
 
     setSelectedOptions(prev => {
       const newState = { ...prev };
@@ -99,6 +108,7 @@ const SquarePage: React.FC = () => {
             const votedInfo = getVoteStatus(decision.id);
             const isAlreadyVoted = !!votedInfo;
             const currentSelected = selectedOptions[decision.id];
+            const isJustVoted = justVoted === decision.id;
 
             return (
               <View key={decision.id} className={styles.voteCard}>
@@ -124,7 +134,7 @@ const SquarePage: React.FC = () => {
                       <View
                         key={option.id}
                         className={`${styles.optionItem} ${isSelected ? styles.optionSelected : ''} ${wasVoted ? styles.optionVoted : ''}`}
-                        onClick={() => !isAlreadyVoted && handleSelectOption(decision.id, option.id)}
+                        onClick={() => !isAlreadyVoted && !isJustVoted && handleSelectOption(decision.id, option.id)}
                       >
                         <View className={styles.optionTopRow}>
                           <View className={styles.optionTitleRow}>
@@ -149,19 +159,18 @@ const SquarePage: React.FC = () => {
                   })}
                 </View>
 
-                {isAlreadyVoted ? (
+                {isJustVoted ? (
+                  <View className={styles.votedBadgeLarge}>
+                    <Text className={styles.votedBadgeText}>✓ 投票成功</Text>
+                  </View>
+                ) : isAlreadyVoted ? (
                   <View className={styles.votedBadgeLarge}>
                     <Text className={styles.votedBadgeText}>✓ 已完成投票</Text>
                   </View>
                 ) : (
                   <View
                     className={`${styles.voteButton} ${!currentSelected ? styles.voteButtonDisabled : ''}`}
-                    onClick={() => {
-                      if (!currentSelected) {
-                        return;
-                      }
-                      handleVote(decision.id);
-                    }}
+                    onClick={() => handleVote(decision.id)}
                   >
                     <Text className={styles.voteButtonText}>
                       {currentSelected ? '确认投票' : '请先选择选项'}

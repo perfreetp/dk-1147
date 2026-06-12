@@ -12,6 +12,7 @@ interface AppContextType {
   updateDecision: (id: string, updates: Partial<Decision>) => void;
   deleteDecision: (id: string) => void;
   addTemplate: (template: Template) => void;
+  useTemplate: (templateId: string) => void;
   addVote: (decisionId: string, optionId: string) => void;
   getDecision: (id: string) => Decision | undefined;
   getSquareDecision: (id: string) => Decision | undefined;
@@ -115,6 +116,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     storageService.saveTemplates(updatedTemplates);
   };
 
+  const useTemplate = (templateId: string) => {
+    const updatedTemplates = templates.map(t =>
+      t.id === templateId ? { ...t, usageCount: t.usageCount + 1 } : t
+    );
+    setTemplates(updatedTemplates);
+    storageService.saveTemplates(updatedTemplates);
+  };
+
   const addVote = (decisionId: string, optionId: string) => {
     storageService.addVote(decisionId, optionId);
     setVotedDecisions(storageService.getVotedDecisions());
@@ -188,6 +197,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateDecision,
         deleteDecision,
         addTemplate,
+        useTemplate,
         addVote,
         getDecision,
         getSquareDecision,

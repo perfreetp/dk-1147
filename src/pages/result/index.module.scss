@@ -74,11 +74,173 @@
   box-shadow: $shadow-card;
 }
 
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
 .sectionTitle {
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
   color: $color-text-primary;
   margin-bottom: $spacing-lg;
+}
+
+.trendSummary {
+  margin-bottom: $spacing-lg;
+}
+
+.leaderCard {
+  background: linear-gradient(135deg, rgba($color-primary, 0.1) 0%, rgba($color-primary-light, 0.1) 100%);
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  text-align: center;
+  border: 2rpx solid rgba($color-primary, 0.2);
+}
+
+.leaderLabel {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.leaderTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.leaderVotes {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  display: block;
+}
+
+.gapText {
+  color: $color-success;
+  font-weight: $font-weight-semibold;
+}
+
+.trendOptions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.trendOptionItem {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.trendOptionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.trendOptionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.trendVotes {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.trendVoteCount {
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+}
+
+.trendVoteLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.changeUp {
+  font-size: $font-size-sm;
+  color: $color-success;
+  font-weight: $font-weight-semibold;
+}
+
+.changeDown {
+  font-size: $font-size-sm;
+  color: $color-error;
+  font-weight: $font-weight-semibold;
+}
+
+.trendBar {
+  height: 8rpx;
+  background: $color-border;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.trendProgress {
+  height: 100%;
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+.recentTrend {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.recentLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.recentDays {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.dayItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+}
+
+.dayDate {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  min-width: 120rpx;
+}
+
+.dayVotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.dayVoteItem {
+  background: $color-bg-card;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+}
+
+.dayOptionName {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
 }
 
 .optionResult {
@@ -174,43 +336,6 @@
   font-size: $font-size-xs;
   color: $color-text-secondary;
   line-height: $line-height-normal;
-}
-
-.trendContainer {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-md;
-}
-
-.trendItem {
-  background: $color-bg-page;
-  border-radius: $radius-md;
-  padding: $spacing-md;
-}
-
-.trendDate {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
-  color: $color-text-primary;
-  margin-bottom: $spacing-sm;
-  display: block;
-}
-
-.trendVotes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $spacing-sm;
-}
-
-.trendVoteItem {
-  background: $color-bg-card;
-  padding: 4rpx 12rpx;
-  border-radius: $radius-xs;
-}
-
-.trendOptionName {
-  font-size: $font-size-xs;
-  color: $color-text-secondary;
 }
 
 .scoreHint {
@@ -320,6 +445,35 @@
   display: block;
 }
 
+.editReflectionButton {
+  @include button-reset;
+  padding: 4rpx 16rpx;
+  background: rgba($color-primary, 0.1);
+  border-radius: $radius-xs;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.editReflectionText {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.reflectionText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  line-height: $line-height-loose;
+}
+
+.noReflectionText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+  text-align: center;
+  padding: $spacing-lg;
+}
+
 .satisfactionDisplay {
   display: flex;
   align-items: center;
@@ -423,6 +577,22 @@
   margin-bottom: $spacing-lg;
   text-align: center;
   display: block;
+}
+
+.reflectionInputContainer {
+  margin-bottom: $spacing-md;
+}
+
+.reflectionInput {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  min-height: 200rpx;
+}
+
+.reflectionInputHint {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
 }
 
 .modalButton {

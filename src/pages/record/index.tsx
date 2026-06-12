@@ -3,11 +3,10 @@ import { View, Text, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useAppContext } from '../../store/context';
 import { Decision, Template } from '../../types/decision';
-import DecisionCard from '../../components/DecisionCard';
 import styles from './index.module.scss';
 
 const RecordPage: React.FC = () => {
-  const { decisions, templates } = useAppContext();
+  const { decisions, templates, useTemplate } = useAppContext();
   const [completedDecisions, setCompletedDecisions] = useState<Decision[]>([]);
   const [activeDecisions, setActiveDecisions] = useState<Decision[]>([]);
   const [avgSatisfaction, setAvgSatisfaction] = useState(0);
@@ -29,7 +28,15 @@ const RecordPage: React.FC = () => {
     });
   };
 
+  const handleReflectionClick = (decisionId: string) => {
+    const decision = decisions.find(d => d.id === decisionId);
+    Taro.navigateTo({
+      url: `/pages/reflection/index?id=${decisionId}&text=${encodeURIComponent(decision?.reflection || '')}`
+    });
+  };
+
   const handleTemplateUse = (template: Template) => {
+    useTemplate(template.id);
     Taro.switchTab({ url: '/pages/create/index' });
   };
 
@@ -75,44 +82,64 @@ const RecordPage: React.FC = () => {
               <View
                 key={decision.id}
                 className={styles.completedCard}
-                onClick={() => handleDecisionClick(decision.id)}
               >
-                <View className={styles.completedHeader}>
-                  <Text className={styles.completedTitle}>{decision.title}</Text>
-                  <View className={styles.completedBadge}>
-                    <Text className={styles.completedBadgeText}>已完成</Text>
-                  </View>
-                </View>
-                {decision.finalChoice && (
-                  <View className={styles.finalChoice}>
-                    <Text className={styles.finalChoiceLabel}>最终选择：</Text>
-                    <Text className={styles.finalChoiceValue}>{getFinalChoiceTitle(decision)}</Text>
-                  </View>
-                )}
-                <View className={styles.completedMeta}>
-                  <Text className={styles.completedMetaText}>
-                    {decision.options.length} 个选项 · {decision.voteCount} 票
-                  </Text>
-                </View>
-                {decision.satisfaction && (
-                  <View className={styles.satisfaction}>
-                    <Text className={styles.satisfactionLabel}>满意度：</Text>
-                    <View className={styles.starsContainer}>
-                      {[1, 2, 3, 4, 5].map(star => (
-                        <Text
-                          key={star}
-                          className={
-                            star <= decision.satisfaction!
-                              ? styles.starFilled
-                              : styles.starEmpty
-                          }
-                        >
-                          ★
-                        </Text>
-                      ))}
+                <View
+                  className={styles.cardContent}
+                  onClick={() => handleDecisionClick(decision.id)}
+                >
+                  <View className={styles.completedHeader}>
+                    <Text className={styles.completedTitle}>{decision.title}</Text>
+                    <View className={styles.completedBadge}>
+                      <Text className={styles.completedBadgeText}>已完成</Text>
                     </View>
                   </View>
-                )}
+                  {decision.finalChoice && (
+                    <View className={styles.finalChoice}>
+                      <Text className={styles.finalChoiceLabel}>最终选择：</Text>
+                      <Text className={styles.finalChoiceValue}>{getFinalChoiceTitle(decision)}</Text>
+                    </View>
+                  )}
+                  <View className={styles.completedMeta}>
+                    <Text className={styles.completedMetaText}>
+                      {decision.options.length} 个选项 · {decision.voteCount} 票
+                    </Text>
+                  </View>
+                  {decision.satisfaction && (
+                    <View className={styles.satisfaction}>
+                      <Text className={styles.satisfactionLabel}>满意度：</Text>
+                      <View className={styles.starsContainer}>
+                        {[1, 2, 3, 4, 5].map(star => (
+                          <Text
+                            key={star}
+                            className={
+                              star <= decision.satisfaction!
+                                ? styles.starFilled
+                                : styles.starEmpty
+                            }
+                          >
+                            ★
+                          </Text>
+                        ))}
+                      </View>
+                    </View>
+                  )}
+                  {decision.reflection && (
+                    <View className={styles.reflectionPreview}>
+                      <Text className={styles.reflectionPreviewText}>
+                        💭 {decision.reflection.substring(0, 50)}
+                        {decision.reflection.length > 50 ? '...' : ''}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+                <View
+                  className={styles.reflectionButton}
+                  onClick={() => handleReflectionClick(decision.id)}
+                >
+                  <Text className={styles.reflectionButtonText}>
+                    {decision.reflection ? '📝 查看复盘' : '💭 添加复盘'}
+                  </Text>
+                </View>
               </View>
             ))}
           </View>
@@ -150,6 +177,9 @@ const RecordPage: React.FC = () => {
                     <Text className={styles.templateOptionText}>{option}</Text>
                   </View>
                 ))}
+              </View>
+              <View className={styles.templateAction}>
+                <Text className={styles.templateActionText}>点击使用 →</Text>
               </View>
             </View>
           ))}

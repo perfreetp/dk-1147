@@ -12,7 +12,7 @@ interface OptionForm {
 }
 
 const CreatePage: React.FC = () => {
-  const { addDecision } = useAppContext();
+  const { addDecision, templates, useTemplate } = useAppContext();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [options, setOptions] = useState<OptionForm[]>([
@@ -21,6 +21,7 @@ const CreatePage: React.FC = () => {
   ]);
   const [deadline, setDeadline] = useState('');
   const [isPublic, setIsPublic] = useState(false);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
 
   const handleAddOption = () => {
     if (options.length >= 5) {
@@ -48,6 +49,24 @@ const CreatePage: React.FC = () => {
     const newOptions = [...options];
     newOptions[index][field] = value;
     setOptions(newOptions);
+  };
+
+  const handleSelectTemplate = (template: any) => {
+    const templateOptions: OptionForm[] = template.options.map((opt: string) => ({
+      title: opt,
+      pros: '',
+      cons: ''
+    }));
+    setOptions(templateOptions.length >= 2 ? templateOptions : [
+      ...templateOptions,
+      { title: '', pros: '', cons: '' }
+    ]);
+    useTemplate(template.id);
+    setShowTemplateModal(false);
+    Taro.showToast({
+      title: '模板已应用',
+      icon: 'success'
+    });
   };
 
   const handleSave = () => {
@@ -133,7 +152,15 @@ const CreatePage: React.FC = () => {
         </View>
 
         <View className={styles.formCard}>
-          <Text className={styles.sectionTitle}>选项设置</Text>
+          <View className={styles.templateHeader}>
+            <Text className={styles.sectionTitle}>选项设置</Text>
+            <View
+              className={styles.templateButton}
+              onClick={() => setShowTemplateModal(true)}
+            >
+              <Text className={styles.templateButtonText}>📋 从模板选择</Text>
+            </View>
+          </View>
           <View className={styles.optionsList}>
             {options.map((option, index) => (
               <View key={index} className={styles.optionCard}>
@@ -217,6 +244,46 @@ const CreatePage: React.FC = () => {
           <Text className={styles.saveButtonText}>保存并发布</Text>
         </View>
       </View>
+
+      {showTemplateModal && (
+        <View className={styles.modal}>
+          <View className={styles.modalContent}>
+            <Text className={styles.modalTitle}>📋 选择模板</Text>
+            <ScrollView className={styles.templateList} scrollY>
+              {templates.map(template => (
+                <View
+                  key={template.id}
+                  className={styles.templateItem}
+                  onClick={() => handleSelectTemplate(template)}
+                >
+                  <View className={styles.templateInfo}>
+                    <Text className={styles.templateName}>{template.title}</Text>
+                    <Text className={styles.templateDesc}>{template.description}</Text>
+                    <View className={styles.templateOptions}>
+                      {template.options.map((opt, index) => (
+                        <View key={index} className={styles.templateOption}>
+                          <Text className={styles.templateOptionText}>{opt}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                  <View className={styles.templateUsage}>
+                    <Text className={styles.templateUsageText}>
+                      使用 {template.usageCount} 次
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+            <View
+              className={styles.modalCancelButton}
+              onClick={() => setShowTemplateModal(false)}
+            >
+              <Text className={styles.modalCancelText}>关闭</Text>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 };

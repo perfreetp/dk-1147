@@ -14,6 +14,8 @@ const ResultPage: React.FC = () => {
   const [showSatisfactionModal, setShowSatisfactionModal] = useState(false);
   const [satisfaction, setSatisfaction] = useState(0);
   const [hasChanges, setHasChanges] = useState(false);
+  const [reflection, setReflection] = useState('');
+  const [showReflectionModal, setShowReflectionModal] = useState(false);
 
   useEffect(() => {
     const params = Taro.getCurrentInstance()?.router?.params;
@@ -27,6 +29,9 @@ const ResultPage: React.FC = () => {
         }
         if (found.satisfaction) {
           setSatisfaction(found.satisfaction);
+        }
+        if (found.reflection) {
+          setReflection(found.reflection);
         }
         const scores: Record<string, { budget: number; time: number; mood: number }> = {};
         found.options?.forEach((opt: any) => {
@@ -71,11 +76,18 @@ const ResultPage: React.FC = () => {
     updateDecision(decisionId, {
       finalChoice: selectedOption,
       status: 'ended',
-      options: optionsWithScores
+      options: optionsWithScores,
+      reflection: reflection
     });
 
     setHasChanges(false);
     Taro.showToast({ title: '决策已保存', icon: 'success' });
+  };
+
+  const handleSaveReflection = () => {
+    updateDecision(decisionId, { reflection });
+    Taro.showToast({ title: '复盘已保存', icon: 'success' });
+    setShowReflectionModal(false);
   };
 
   const handleGenerateReport = () => {
@@ -111,6 +123,10 @@ ${decision?.options.map((opt: any) => `
   ✓ 优点: ${opt.pros?.join('、')}
   ✗ 缺点: ${opt.cons?.join('、')}
 `).join('')}
+${decision?.reflection ? `
+💭 复盘感想:
+${decision.reflection}
+` : ''}
 ━━━━━━━━━━━━━━━━━━
 🕐 生成时间: ${new Date().toLocaleString()}
     `.trim();
@@ -134,6 +150,44 @@ ${decision?.options.map((opt: any) => `
     setShowSatisfactionModal(false);
   };
 
+  const getTrendAnalysis = () => {
+    if (!decision?.voteTrends || decision.voteTrends.length === 0) {
+      return null;
+    }
+
+    const latestTrend = decision.voteTrends[decision.voteTrends.length - 1];
+    const previousTrend = decision.voteTrends.length > 1
+      ? decision.voteTrends[decision.voteTrends.length - 2]
+      : null;
+
+    const optionStats = decision.options.map(opt => {
+      const latestVotes = latestTrend.votes.find(v => v.optionId === opt.id)?.count || 0;
+      const previousVotes = previousTrend?.votes.find(v => v.optionId === opt.id)?.count || 0;
+      const change = latestVotes - previousVotes;
+
+      return {
+        id: opt.id,
+        title: opt.title,
+        votes: latestVotes,
+        change: previousTrend ? change : 0
+      };
+    });
+
+    const maxVotes = Math.max(...optionStats.map(o => o.votes));
+    const leader = optionStats.find(o => o.votes === maxVotes);
+    const secondPlace = optionStats
+      .filter(o => o.id !== leader?.id)
+      .sort((a, b) => b.votes - a.votes)[0];
+    const gap = leader && secondPlace ? leader.votes - secondPlace.votes : 0;
+
+    return {
+      optionStats,
+      leader,
+      gap,
+      recentDays: decision.voteTrends.slice(-3)
+    };
+  };
+
   if (!decision) {
     return (
       <ScrollView className={styles.page} scrollY>
@@ -153,6 +207,8 @@ ${decision?.options.map((opt: any) => `
     const votes = getVoteResult(optionId);
     return Math.round((votes / total) * 100);
   };
+
+  const trendAnalysis = getTrendAnalysis();
 
   return (
     <View style={{ position: 'relative' }}>
@@ -176,6 +232,78 @@ ${decision?.options.map((opt: any) => `
             <Text className={styles.metaText}>截止 {decision.deadline}</Text>
           </View>
         </View>
+
+        {trendAnalysis && (
+          <View className={styles.section}>
+            <Text className={styles.sectionTitle}>📊 趋势分析</Text>
+
+            <View className={styles.trendSummary}>
+              <View className={styles.leaderCard}>
+                <Text className={styles.leaderLabel}>🏆 当前领先</Text>
+                <Text className={styles.leaderTitle}>{trendAnalysis.leader?.title}</Text>
+                <Text className={styles.leaderVotes}>
+                  {trendAnalysis.leader?.votes} 票
+                  {trendAnalysis.gap > 0 && (
+                    <Text className={styles.gapText}> 领先 {trendAnalysis.gap} 票</Text>
+                  )}
+                </Text>
+              </View>
+            </View>
+
+            <View className={styles.trendOptions}>
+              {trendAnalysis.optionStats.map(opt => (
+                <View key={opt.id} className={styles.trendOptionItem}>
+                  <View className={styles.trendOptionHeader}>
+                    <Text className={styles.trendOptionTitle}>{opt.title}</Text>
+                    <View className={styles.trendVotes}>
+                      <Text className={styles.trendVoteCount}>{opt.votes}</Text>
+                      <Text className={styles.trendVoteLabel}>票</Text>
+                      {opt.change !== 0 && (
+                        <Text className={opt.change > 0 ? styles.changeUp : styles.changeDown}>
+                          {opt.change > 0 ? '+' : ''}{opt.change}
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                  <View className={styles.trendBar}>
+                    <View
+                      className={styles.trendProgress}
+                      style={{
+                        width: `${trendAnalysis.leader?.votes ? (opt.votes / trendAnalysis.leader.votes) * 100 : 0}%`,
+                        background: opt.id === trendAnalysis.leader?.id
+                          ? 'linear-gradient(90deg, #6366f1 0%, #818cf8 100%)'
+                          : '#e2e8f0'
+                      }}
+                    />
+                  </View>
+                </View>
+              ))}
+            </View>
+
+            {trendAnalysis.recentDays.length > 0 && (
+              <View className={styles.recentTrend}>
+                <Text className={styles.recentLabel}>📅 近期变化</Text>
+                <View className={styles.recentDays}>
+                  {trendAnalysis.recentDays.map((day: any, index: number) => (
+                    <View key={index} className={styles.dayItem}>
+                      <Text className={styles.dayDate}>{day.date}</Text>
+                      <View className={styles.dayVotes}>
+                        {day.votes.map((v: any, vIndex: number) => {
+                          const opt = decision.options?.find((o: any) => o.id === v.optionId);
+                          return (
+                            <View key={vIndex} className={styles.dayVoteItem}>
+                              <Text className={styles.dayOptionName}>{opt?.title}: {v.count}</Text>
+                            </View>
+                          );
+                        })}
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+        )}
 
         <View className={styles.section}>
           <Text className={styles.sectionTitle}>投票结果</Text>
@@ -217,29 +345,6 @@ ${decision?.options.map((opt: any) => `
             );
           })}
         </View>
-
-        {decision.voteTrends && decision.voteTrends.length > 0 && (
-          <View className={styles.section}>
-            <Text className={styles.sectionTitle}>票数趋势</Text>
-            <View className={styles.trendContainer}>
-              {decision.voteTrends.map((trend: any, index: number) => (
-                <View key={index} className={styles.trendItem}>
-                  <Text className={styles.trendDate}>{trend.date}</Text>
-                  <View className={styles.trendVotes}>
-                    {trend.votes.map((v: any, vIndex: number) => {
-                      const opt = decision.options?.find((o: any) => o.id === v.optionId);
-                      return (
-                        <View key={vIndex} className={styles.trendVoteItem}>
-                          <Text className={styles.trendOptionName}>{opt?.title}: {v.count}</Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
 
         <View className={styles.section}>
           <Text className={styles.sectionTitle}>选项打分</Text>
@@ -323,6 +428,30 @@ ${decision?.options.map((opt: any) => `
           </View>
         </View>
 
+        {decision.status === 'ended' && (
+          <View className={styles.section}>
+            <View className={styles.sectionHeader}>
+              <Text className={styles.sectionTitle}>💭 复盘感想</Text>
+              <View
+                className={styles.editReflectionButton}
+                onClick={() => {
+                  setReflection(decision.reflection || '');
+                  setShowReflectionModal(true);
+                }}
+              >
+                <Text className={styles.editReflectionText}>
+                  {decision.reflection ? '编辑' : '添加'}
+                </Text>
+              </View>
+            </View>
+            {decision.reflection ? (
+              <Text className={styles.reflectionText}>{decision.reflection}</Text>
+            ) : (
+              <Text className={styles.noReflectionText}>点击添加你的复盘感想</Text>
+            )}
+          </View>
+        )}
+
         {decision.status === 'ended' && decision.satisfaction && (
           <View className={styles.section}>
             <Text className={styles.sectionTitle}>事后满意度</Text>
@@ -387,6 +516,45 @@ ${decision?.options.map((opt: any) => `
               onClick={() => setShowSatisfactionModal(false)}
             >
               <Text className={styles.modalCancelText}>取消</Text>
+            </View>
+          </View>
+        </View>
+      )}
+
+      {showReflectionModal && (
+        <View className={styles.modal}>
+          <View className={styles.modalContent}>
+            <Text className={styles.modalTitle}>💭 复盘感想</Text>
+            <View className={styles.reflectionInputContainer}>
+              <View
+                className={styles.reflectionInput}
+                onClick={() => {
+                  Taro.navigateTo({
+                    url: `/pages/reflection/index?id=${decisionId}`
+                  });
+                }}
+              >
+                <Text className={styles.reflectionInputHint}>
+                  {reflection || '点击输入复盘感想...'}
+                </Text>
+              </View>
+            </View>
+            <View
+              className={styles.modalButton}
+              onClick={() => {
+                Taro.navigateTo({
+                  url: `/pages/reflection/index?id=${decisionId}&text=${encodeURIComponent(reflection || '')}`
+                });
+                setShowReflectionModal(false);
+              }}
+            >
+              <Text className={styles.modalButtonText}>编辑复盘</Text>
+            </View>
+            <View
+              className={styles.modalCancelButton}
+              onClick={() => setShowReflectionModal(false)}
+            >
+              <Text className={styles.modalCancelText}>关闭</Text>
             </View>
           </View>
         </View>

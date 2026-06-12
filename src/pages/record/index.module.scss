@@ -84,9 +84,13 @@
 .completedCard {
   background: $color-bg-card;
   border-radius: $radius-md;
-  padding: $spacing-lg;
   margin-bottom: $spacing-md;
   box-shadow: $shadow-card;
+  overflow: hidden;
+}
+
+.cardContent {
+  padding: $spacing-lg;
 
   &:active {
     opacity: 0.9;
@@ -175,6 +179,34 @@
   color: $color-border;
 }
 
+.reflectionPreview {
+  background: rgba($color-satisfaction, 0.05);
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  margin-top: $spacing-sm;
+}
+
+.reflectionPreviewText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.reflectionButton {
+  background: $color-bg-page;
+  padding: $spacing-md $spacing-lg;
+  border-top: 1rpx solid $color-divider;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.reflectionButtonText {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
 .templateList {
   display: flex;
   flex-direction: column;
@@ -189,6 +221,7 @@
 
   &:active {
     opacity: 0.9;
+    background: rgba($color-primary, 0.02);
   }
 }
 
@@ -228,6 +261,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: $spacing-xs;
+  margin-bottom: $spacing-sm;
 }
 
 .templateOption {
@@ -239,6 +273,17 @@
 .templateOptionText {
   font-size: $font-size-xs;
   color: $color-text-secondary;
+}
+
+.templateAction {
+  border-top: 1rpx solid $color-divider;
+  padding-top: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.templateActionText {
+  font-size: $font-size-sm;
+  color: $color-primary;
 }
 
 .emptyState {
