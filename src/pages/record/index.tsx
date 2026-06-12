@@ -6,7 +6,7 @@ import { Decision, Template } from '../../types/decision';
 import styles from './index.module.scss';
 
 const RecordPage: React.FC = () => {
-  const { decisions, templates, useTemplate } = useAppContext();
+  const { decisions, templates, useTemplate, reportHistory, setPendingTemplate } = useAppContext();
   const [completedDecisions, setCompletedDecisions] = useState<Decision[]>([]);
   const [activeDecisions, setActiveDecisions] = useState<Decision[]>([]);
   const [avgSatisfaction, setAvgSatisfaction] = useState(0);
@@ -20,7 +20,7 @@ const RecordPage: React.FC = () => {
     const satisfactionSum = completed.reduce((sum, d) => sum + (d.satisfaction || 0), 0);
     const avg = completed.length > 0 ? satisfactionSum / completed.length : 0;
     setAvgSatisfaction(Math.round(avg));
-  }, [decisions]);
+  }, [decisions, templates]);
 
   const handleDecisionClick = (decisionId: string) => {
     Taro.navigateTo({
@@ -35,9 +35,25 @@ const RecordPage: React.FC = () => {
     });
   };
 
+  const handleReportClick = (decisionId: string) => {
+    Taro.navigateTo({
+      url: `/pages/report-history/index?id=${decisionId}`
+    });
+  };
+
   const handleTemplateUse = (template: Template) => {
-    useTemplate(template.id);
+    setPendingTemplate({
+      templateId: template.id,
+      options: template.options,
+      title: template.title
+    });
+
     Taro.switchTab({ url: '/pages/create/index' });
+
+    Taro.showToast({
+      title: '模板已带入',
+      icon: 'success'
+    });
   };
 
   const getFinalChoiceTitle = (decision: Decision) => {
@@ -67,8 +83,8 @@ const RecordPage: React.FC = () => {
           <Text className={styles.statLabel}>平均满意度</Text>
         </View>
         <View className={styles.statCard}>
-          <Text className={styles.statNumber}>{templates.length}</Text>
-          <Text className={styles.statLabel}>收藏模板</Text>
+          <Text className={styles.statNumber}>{reportHistory.length}</Text>
+          <Text className={styles.statLabel}>报告历史</Text>
         </View>
       </View>
 
@@ -132,13 +148,23 @@ const RecordPage: React.FC = () => {
                     </View>
                   )}
                 </View>
-                <View
-                  className={styles.reflectionButton}
-                  onClick={() => handleReflectionClick(decision.id)}
-                >
-                  <Text className={styles.reflectionButtonText}>
-                    {decision.reflection ? '📝 查看复盘' : '💭 添加复盘'}
-                  </Text>
+                <View className={styles.actionButtons}>
+                  <View
+                    className={styles.actionButton}
+                    onClick={() => handleReflectionClick(decision.id)}
+                  >
+                    <Text className={styles.actionButtonText}>
+                      {decision.reflection ? '📝 复盘' : '💭 复盘'}
+                    </Text>
+                  </View>
+                  <View
+                    className={styles.actionButton + ' ' + styles.actionButtonPrimary}
+                    onClick={() => handleReportClick(decision.id)}
+                  >
+                    <Text className={styles.actionButtonTextPrimary}>
+                      📊 报告
+                    </Text>
+                  </View>
                 </View>
               </View>
             ))}
@@ -160,26 +186,36 @@ const RecordPage: React.FC = () => {
             <View
               key={template.id}
               className={styles.templateCard}
-              onClick={() => handleTemplateUse(template)}
             >
-              <View className={styles.templateHeader}>
-                <Text className={styles.templateTitle}>{template.title}</Text>
-                <View className={styles.templateCount}>
-                  <Text className={styles.templateCountText}>
-                    使用 {template.usageCount} 次
-                  </Text>
+              <View
+                className={styles.templateContent}
+                onClick={() => handleTemplateUse(template)}
+              >
+                <View className={styles.templateHeader}>
+                  <Text className={styles.templateTitle}>{template.title}</Text>
+                  <View className={styles.templateCategory}>
+                    <Text className={styles.templateCategoryText}>{template.category}</Text>
+                  </View>
+                </View>
+                <Text className={styles.templateDesc}>{template.description}</Text>
+                <View className={styles.templateOptions}>
+                  {template.options.map((option, index) => (
+                    <View key={index} className={styles.templateOption}>
+                      <Text className={styles.templateOptionText}>{option}</Text>
+                    </View>
+                  ))}
                 </View>
               </View>
-              <Text className={styles.templateDesc}>{template.description}</Text>
-              <View className={styles.templateOptions}>
-                {template.options.map((option, index) => (
-                  <View key={index} className={styles.templateOption}>
-                    <Text className={styles.templateOptionText}>{option}</Text>
-                  </View>
-                ))}
-              </View>
-              <View className={styles.templateAction}>
-                <Text className={styles.templateActionText}>点击使用 →</Text>
+              <View className={styles.templateFooter}>
+                <Text className={styles.templateUsageText}>
+                  使用 {template.usageCount} 次
+                </Text>
+                <View
+                  className={styles.templateUseButton}
+                  onClick={() => handleTemplateUse(template)}
+                >
+                  <Text className={styles.templateUseButtonText}>立即使用</Text>
+                </View>
               </View>
             </View>
           ))}

@@ -192,19 +192,43 @@
   line-height: $line-height-normal;
 }
 
-.reflectionButton {
-  background: $color-bg-page;
-  padding: $spacing-md $spacing-lg;
+.actionButtons {
+  display: flex;
   border-top: 1rpx solid $color-divider;
+}
+
+.actionButton {
+  @include button-reset;
+  flex: 1;
+  padding: $spacing-md;
+  background: $color-bg-page;
+
+  &:not(:last-child) {
+    border-right: 1rpx solid $color-divider;
+  }
 
   &:active {
     opacity: 0.8;
   }
 }
 
-.reflectionButtonText {
+.actionButtonText {
   font-size: $font-size-sm;
   color: $color-primary;
+  display: block;
+  text-align: center;
+}
+
+.actionButtonPrimary {
+  background: rgba($color-primary, 0.05);
+}
+
+.actionButtonTextPrimary {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+  display: block;
+  text-align: center;
 }
 
 .templateList {
@@ -216,19 +240,22 @@
 .templateCard {
   background: $color-bg-card;
   border-radius: $radius-md;
-  padding: $spacing-lg;
   box-shadow: $shadow-card;
+  overflow: hidden;
+}
+
+.templateContent {
+  padding: $spacing-lg;
 
   &:active {
     opacity: 0.9;
-    background: rgba($color-primary, 0.02);
   }
 }
 
 .templateHeader {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: $spacing-sm;
 }
 
@@ -240,15 +267,15 @@
   margin-right: $spacing-sm;
 }
 
-.templateCount {
-  background: rgba($color-satisfaction, 0.1);
-  padding: 4rpx 16rpx;
+.templateCategory {
+  background: rgba($color-primary, 0.1);
+  padding: 4rpx 12rpx;
   border-radius: $radius-xs;
 }
 
-.templateCountText {
+.templateCategoryText {
   font-size: $font-size-xs;
-  color: $color-satisfaction;
+  color: $color-primary;
 }
 
 .templateDesc {
@@ -261,7 +288,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: $spacing-xs;
-  margin-bottom: $spacing-sm;
 }
 
 .templateOption {
@@ -275,15 +301,35 @@
   color: $color-text-secondary;
 }
 
-.templateAction {
+.templateFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md $spacing-lg;
+  background: $color-bg-page;
   border-top: 1rpx solid $color-divider;
-  padding-top: $spacing-sm;
-  margin-top: $spacing-sm;
 }
 
-.templateActionText {
+.templateUsageText {
   font-size: $font-size-sm;
-  color: $color-primary;
+  color: $color-text-tertiary;
+}
+
+.templateUseButton {
+  @include button-reset;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-sm;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.templateUseButtonText {
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
 }
 
 .emptyState {

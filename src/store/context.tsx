@@ -1,13 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Decision, Template } from '../types/decision';
-import { storageService, StoredVote } from '../services/storage';
+import { Decision, Template, ReportHistory } from '../types/decision';
+import { storageService, StoredVote, PendingTemplate } from '../services/storage';
 import { mockDecisions, mockTemplates, mockSquareDecisions } from '../data/mock';
 
 interface AppContextType {
   decisions: Decision[];
   squareDecisions: Decision[];
   templates: Template[];
+  reportHistory: ReportHistory[];
   votedDecisions: StoredVote[];
+  pendingTemplate: PendingTemplate | null;
   addDecision: (decision: Decision) => void;
   updateDecision: (id: string, updates: Partial<Decision>) => void;
   deleteDecision: (id: string) => void;
@@ -18,6 +20,10 @@ interface AppContextType {
   getSquareDecision: (id: string) => Decision | undefined;
   isVoted: (decisionId: string) => StoredVote | null;
   refreshData: () => void;
+  addReport: (report: ReportHistory) => void;
+  getReport: (decisionId: string) => ReportHistory | null;
+  setPendingTemplate: (template: PendingTemplate | null) => void;
+  clearPendingTemplate: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -26,7 +32,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [decisions, setDecisions] = useState<Decision[]>([]);
   const [squareDecisions, setSquareDecisions] = useState<Decision[]>([]);
   const [templates, setTemplates] = useState<Template[]>([]);
+  const [reportHistory, setReportHistory] = useState<ReportHistory[]>([]);
   const [votedDecisions, setVotedDecisions] = useState<StoredVote[]>([]);
+  const [pendingTemplate, setPendingTemplateState] = useState<PendingTemplate | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -37,7 +45,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const storedDecisions = storageService.getDecisions();
     let storedSquareDecisions = storageService.getSquareDecisions();
     const storedTemplates = storageService.getTemplates();
+    const storedReports = storageService.getReportHistory();
     const storedVoted = storageService.getVotedDecisions();
+    const storedPendingTemplate = storageService.getPendingTemplate();
 
     if (storedDecisions.length === 0) {
       storageService.saveDecisions(mockDecisions);
@@ -60,7 +70,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setTemplates(storedTemplates);
     }
 
+    if (storedReports.length === 0) {
+      setReportHistory([]);
+    } else {
+      setReportHistory(storedReports);
+    }
+
     setVotedDecisions(storedVoted);
+    setPendingTemplateState(storedPendingTemplate);
     setIsInitialized(true);
   };
 
@@ -68,7 +85,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setDecisions(storageService.getDecisions());
     setSquareDecisions(storageService.getSquareDecisions());
     setTemplates(storageService.getTemplates());
+    setReportHistory(storageService.getReportHistory());
     setVotedDecisions(storageService.getVotedDecisions());
+    setPendingTemplateState(storageService.getPendingTemplate());
   };
 
   const addDecision = (decision: Decision) => {
@@ -186,13 +205,38 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return votedDecisions.find(v => v.decisionId === decisionId) || null;
   };
 
+  const addReport = (report: ReportHistory) => {
+    storageService.addReport(report);
+    setReportHistory(storageService.getReportHistory());
+  };
+
+  const getReport = (decisionId: string) => {
+    return storageService.getReportByDecisionId(decisionId);
+  };
+
+  const setPendingTemplate = (template: PendingTemplate | null) => {
+    if (template) {
+      storageService.savePendingTemplate(template);
+    } else {
+      storageService.clearPendingTemplate();
+    }
+    setPendingTemplateState(template);
+  };
+
+  const clearPendingTemplate = () => {
+    storageService.clearPendingTemplate();
+    setPendingTemplateState(null);
+  };
+
   return (
     <AppContext.Provider
       value={{
         decisions,
         squareDecisions,
         templates,
+        reportHistory,
         votedDecisions,
+        pendingTemplate,
         addDecision,
         updateDecision,
         deleteDecision,
@@ -202,7 +246,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         getDecision,
         getSquareDecision,
         isVoted,
-        refreshData
+        refreshData,
+        addReport,
+        getReport,
+        setPendingTemplate,
+        clearPendingTemplate
       }}
     >
       {children}

@@ -1,17 +1,25 @@
 import Taro from '@tarojs/taro';
-import { Decision, VoteTrend } from '../types/decision';
+import { Decision, ReportHistory } from '../types/decision';
 
 const STORAGE_KEYS = {
   DECISIONS: 'choice_center_decisions',
   SQUARE_DECISIONS: 'choice_center_square',
   VOTED_IDS: 'choice_center_voted',
-  TEMPLATES: 'choice_center_templates'
+  TEMPLATES: 'choice_center_templates',
+  REPORT_HISTORY: 'choice_center_reports',
+  PENDING_TEMPLATE: 'choice_center_pending_template'
 };
 
 export interface StoredVote {
   decisionId: string;
   optionId: string;
   votedAt: string;
+}
+
+export interface PendingTemplate {
+  templateId: string;
+  options: string[];
+  title: string;
 }
 
 class StorageService {
@@ -104,6 +112,67 @@ class StorageService {
     } catch (error) {
       console.error('[Storage] Failed to get templates:', error);
       return [];
+    }
+  }
+
+  saveReportHistory(reports: ReportHistory[]): void {
+    try {
+      Taro.setStorageSync(STORAGE_KEYS.REPORT_HISTORY, reports);
+      console.info('[Storage] Report history saved:', reports.length);
+    } catch (error) {
+      console.error('[Storage] Failed to save report history:', error);
+    }
+  }
+
+  getReportHistory(): ReportHistory[] {
+    try {
+      const data = Taro.getStorageSync(STORAGE_KEYS.REPORT_HISTORY);
+      return data || [];
+    } catch (error) {
+      console.error('[Storage] Failed to get report history:', error);
+      return [];
+    }
+  }
+
+  addReport(report: ReportHistory): void {
+    const reports = this.getReportHistory();
+    const existingIndex = reports.findIndex(r => r.decisionId === report.decisionId);
+    if (existingIndex !== -1) {
+      reports[existingIndex] = report;
+    } else {
+      reports.unshift(report);
+    }
+    this.saveReportHistory(reports);
+  }
+
+  getReportByDecisionId(decisionId: string): ReportHistory | null {
+    const reports = this.getReportHistory();
+    return reports.find(r => r.decisionId === decisionId) || null;
+  }
+
+  savePendingTemplate(template: PendingTemplate): void {
+    try {
+      Taro.setStorageSync(STORAGE_KEYS.PENDING_TEMPLATE, template);
+    } catch (error) {
+      console.error('[Storage] Failed to save pending template:', error);
+    }
+  }
+
+  getPendingTemplate(): PendingTemplate | null {
+    try {
+      const data = Taro.getStorageSync(STORAGE_KEYS.PENDING_TEMPLATE);
+      return data || null;
+    } catch (error) {
+      console.error('[Storage] Failed to get pending template:', error);
+      return null;
+    }
+  }
+
+  clearPendingTemplate(): void {
+    try {
+      Taro.removeStorageSync(STORAGE_KEYS.PENDING_TEMPLATE);
+    } catch (error) {
+      console.error('[Storage] Failed to clear pending template:', error);
     }
   }
 

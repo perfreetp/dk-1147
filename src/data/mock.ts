@@ -116,35 +116,64 @@ export const mockTemplates: Template[] = [
     title: '周末活动选择',
     description: '适合选择周末去哪里玩',
     options: ['去公园', '逛商场', '看电影', '宅在家'],
-    usageCount: 12
+    usageCount: 12,
+    category: '生活'
   },
   {
     id: '2',
     title: '午餐选择',
     description: '适合选择吃什么',
     options: ['中餐', '西餐', '日料', '快餐'],
-    usageCount: 8
+    usageCount: 8,
+    category: '生活'
   },
   {
     id: '3',
     title: '购物二选一',
     description: '适合做购物决策',
     options: ['选项A', '选项B'],
-    usageCount: 15
+    usageCount: 15,
+    category: '购物'
   },
   {
     id: '4',
     title: '出行方式',
     description: '选择怎么出行',
     options: ['自驾', '公交', '地铁', '打车'],
-    usageCount: 6
+    usageCount: 6,
+    category: '出行'
   },
   {
     id: '5',
     title: '礼物选择',
     description: '选择送什么礼物',
     options: ['鲜花', '巧克力', '电子产品', '手工'],
-    usageCount: 9
+    usageCount: 9,
+    category: '购物'
+  },
+  {
+    id: '6',
+    title: '工作计划',
+    description: '安排一周的工作计划',
+    options: ['优先级高', '紧急优先', '按顺序', '灵活安排'],
+    usageCount: 5,
+    category: '工作'
+  },
+  {
+    id: '7',
+    title: '约会地点',
+    description: '选择约会去哪里',
+    options: ['餐厅', '电影院', '公园', '咖啡厅'],
+    usageCount: 7,
+    category: '生活'
+  },
+  {
+    id: '8',
+    title: '租房选择',
+    description: '选择租在哪里',
+    options: ['离公司近', '价格便宜', '交通便利', '环境好'],
+    usageCount: 4,
+    category: '其他'
   }
 ];
 

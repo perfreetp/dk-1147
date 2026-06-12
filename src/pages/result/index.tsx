@@ -96,46 +96,8 @@ const ResultPage: React.FC = () => {
       return;
     }
 
-    const selectedOpt = decision?.options?.find((opt: any) => opt.id === selectedOption);
-    const scores = optionScores[selectedOption] || { budget: 3, time: 3, mood: 3 };
-    const report = `
-📊 选择报告
-━━━━━━━━━━━━━━━━━━
-📌 ${decision?.title}
-${decision?.description ? `📝 ${decision?.description}` : ''}
-━━━━━━━━━━━━━━━━━━
-✅ 最终选择: ${selectedOpt?.title}
-
-📈 投票结果: ${decision?.voteCount} 票
-${decision?.voteResults && Object.keys(decision.voteResults).length > 0 ? `
-投票分布:
-${decision.options.map((opt: any) => `  • ${opt.title}: ${decision.voteResults?.[opt.id] || 0} 票`).join('\n')}
-` : ''}
-
-⭐ 评分（${selectedOpt?.title}）:
-  • 预算匹配: ${scores.budget}/5 ${'★'.repeat(scores.budget)}${'☆'.repeat(5-scores.budget)}
-  • 时间匹配: ${scores.time}/5 ${'★'.repeat(scores.time)}${'☆'.repeat(5-scores.time)}
-  • 心情匹配: ${scores.mood}/5 ${'★'.repeat(scores.mood)}${'☆'.repeat(5-scores.mood)}
-
-📋 选项分析:
-${decision?.options.map((opt: any) => `
-【${opt.title}】
-  ✓ 优点: ${opt.pros?.join('、')}
-  ✗ 缺点: ${opt.cons?.join('、')}
-`).join('')}
-${decision?.reflection ? `
-💭 复盘感想:
-${decision.reflection}
-` : ''}
-━━━━━━━━━━━━━━━━━━
-🕐 生成时间: ${new Date().toLocaleString()}
-    `.trim();
-
-    Taro.showModal({
-      title: '📊 选择报告',
-      content: report,
-      showCancel: false,
-      confirmText: '知道了'
+    Taro.navigateTo({
+      url: `/pages/report-history/index?id=${decisionId}`
     });
   };
 
@@ -155,36 +117,44 @@ ${decision.reflection}
       return null;
     }
 
-    const latestTrend = decision.voteTrends[decision.voteTrends.length - 1];
-    const previousTrend = decision.voteTrends.length > 1
-      ? decision.voteTrends[decision.voteTrends.length - 2]
-      : null;
+    const voteResults = decision.voteResults || {};
+    const totalVotes = decision.voteCount || 0;
 
     const optionStats = decision.options.map(opt => {
-      const latestVotes = latestTrend.votes.find(v => v.optionId === opt.id)?.count || 0;
-      const previousVotes = previousTrend?.votes.find(v => v.optionId === opt.id)?.count || 0;
-      const change = latestVotes - previousVotes;
-
+      const votes = voteResults[opt.id] || 0;
+      const percentage = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
       return {
         id: opt.id,
         title: opt.title,
-        votes: latestVotes,
-        change: previousTrend ? change : 0
+        votes,
+        percentage
       };
     });
 
-    const maxVotes = Math.max(...optionStats.map(o => o.votes));
-    const leader = optionStats.find(o => o.votes === maxVotes);
-    const secondPlace = optionStats
-      .filter(o => o.id !== leader?.id)
-      .sort((a, b) => b.votes - a.votes)[0];
+    optionStats.sort((a, b) => b.votes - a.votes);
+
+    const leader = optionStats[0];
+    const secondPlace = optionStats[1];
     const gap = leader && secondPlace ? leader.votes - secondPlace.votes : 0;
+
+    const recentTrends = decision.voteTrends.slice(-3).map(trend => {
+      const changes: Record<string, number> = {};
+      trend.votes.forEach((v: any) => {
+        const prevTrend = decision.voteTrends.find((t: any) =>
+          t.date < trend.date && t.votes.find((p: any) => p.optionId === v.optionId)
+        );
+        const prev = prevTrend?.votes.find((p: any) => p.optionId === v.optionId);
+        changes[v.optionId] = prev ? v.count - prev.count : 0;
+      });
+      return { date: trend.date, votes: trend.votes, changes };
+    });
 
     return {
       optionStats,
       leader,
       gap,
-      recentDays: decision.voteTrends.slice(-3)
+      totalVotes,
+      recentTrends
     };
   };
 
@@ -242,7 +212,7 @@ ${decision.reflection}
                 <Text className={styles.leaderLabel}>🏆 当前领先</Text>
                 <Text className={styles.leaderTitle}>{trendAnalysis.leader?.title}</Text>
                 <Text className={styles.leaderVotes}>
-                  {trendAnalysis.leader?.votes} 票
+                  {trendAnalysis.leader?.votes} 票 ({trendAnalysis.leader?.percentage}%)
                   {trendAnalysis.gap > 0 && (
                     <Text className={styles.gapText}> 领先 {trendAnalysis.gap} 票</Text>
                   )}
@@ -257,19 +227,14 @@ ${decision.reflection}
                     <Text className={styles.trendOptionTitle}>{opt.title}</Text>
                     <View className={styles.trendVotes}>
                       <Text className={styles.trendVoteCount}>{opt.votes}</Text>
-                      <Text className={styles.trendVoteLabel}>票</Text>
-                      {opt.change !== 0 && (
-                        <Text className={opt.change > 0 ? styles.changeUp : styles.changeDown}>
-                          {opt.change > 0 ? '+' : ''}{opt.change}
-                        </Text>
-                      )}
+                      <Text className={styles.trendVoteLabel}>票 ({opt.percentage}%)</Text>
                     </View>
                   </View>
                   <View className={styles.trendBar}>
                     <View
                       className={styles.trendProgress}
                       style={{
-                        width: `${trendAnalysis.leader?.votes ? (opt.votes / trendAnalysis.leader.votes) * 100 : 0}%`,
+                        width: `${opt.percentage}%`,
                         background: opt.id === trendAnalysis.leader?.id
                           ? 'linear-gradient(90deg, #6366f1 0%, #818cf8 100%)'
                           : '#e2e8f0'
@@ -280,26 +245,24 @@ ${decision.reflection}
               ))}
             </View>
 
-            {trendAnalysis.recentDays.length > 0 && (
+            {trendAnalysis.recentTrends.length > 0 && (
               <View className={styles.recentTrend}>
-                <Text className={styles.recentLabel}>📅 近期变化</Text>
-                <View className={styles.recentDays}>
-                  {trendAnalysis.recentDays.map((day: any, index: number) => (
-                    <View key={index} className={styles.dayItem}>
-                      <Text className={styles.dayDate}>{day.date}</Text>
-                      <View className={styles.dayVotes}>
-                        {day.votes.map((v: any, vIndex: number) => {
-                          const opt = decision.options?.find((o: any) => o.id === v.optionId);
-                          return (
-                            <View key={vIndex} className={styles.dayVoteItem}>
-                              <Text className={styles.dayOptionName}>{opt?.title}: {v.count}</Text>
-                            </View>
-                          );
-                        })}
-                      </View>
+                <Text className={styles.recentLabel}>📅 近期变化（每日增量）</Text>
+                {trendAnalysis.recentTrends.map((trend: any, index: number) => (
+                  <View key={index} className={styles.dayItem}>
+                    <Text className={styles.dayDate}>{trend.date}</Text>
+                    <View className={styles.dayVotes}>
+                      {trend.changes && Object.entries(trend.changes).map(([optionId, delta]: [string, any]) => {
+                        const opt = decision.options?.find((o: any) => o.id === optionId);
+                        return (
+                          <Text key={optionId} className={delta > 0 ? styles.changeUp : styles.changeDown}>
+                            {opt?.title}: {delta > 0 ? '+' : ''}{delta}
+                          </Text>
+                        );
+                      })}
                     </View>
-                  ))}
-                </View>
+                  </View>
+                ))}
               </View>
             )}
           </View>
@@ -530,7 +493,7 @@ ${decision.reflection}
                 className={styles.reflectionInput}
                 onClick={() => {
                   Taro.navigateTo({
-                    url: `/pages/reflection/index?id=${decisionId}`
+                    url: `/pages/reflection/index?id=${decisionId}&text=${encodeURIComponent(reflection || '')}`
                   });
                 }}
               >

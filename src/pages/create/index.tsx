@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Input, Textarea, Switch, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useAppContext } from '../../store/context';
-import { Decision, DecisionOption } from '../../types/decision';
+import { Decision, DecisionOption, TemplateCategory } from '../../types/decision';
 import styles from './index.module.scss';
 
 interface OptionForm {
@@ -11,8 +11,10 @@ interface OptionForm {
   cons: string;
 }
 
+const CATEGORIES: TemplateCategory[] = ['全部', '生活', '购物', '出行', '工作', '其他'];
+
 const CreatePage: React.FC = () => {
-  const { addDecision, templates, useTemplate } = useAppContext();
+  const { addDecision, templates, useTemplate, pendingTemplate, setPendingTemplate, clearPendingTemplate } = useAppContext();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [options, setOptions] = useState<OptionForm[]>([
@@ -22,6 +24,30 @@ const CreatePage: React.FC = () => {
   const [deadline, setDeadline] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<TemplateCategory>('全部');
+  const [searchValue, setSearchValue] = useState('');
+  const [previewTemplate, setPreviewTemplate] = useState<any>(null);
+
+  useEffect(() => {
+    if (pendingTemplate) {
+      const templateOptions: OptionForm[] = pendingTemplate.options.map((opt: string) => ({
+        title: opt,
+        pros: '',
+        cons: ''
+      }));
+      setOptions(templateOptions.length >= 2 ? templateOptions : [
+        ...templateOptions,
+        { title: '', pros: '', cons: '' }
+      ]);
+      clearPendingTemplate();
+    }
+  }, []);
+
+  const filteredTemplates = templates.filter(t => {
+    const matchCategory = selectedCategory === '全部' || t.category === selectedCategory;
+    const matchSearch = !searchValue || t.title.includes(searchValue) || t.description.includes(searchValue);
+    return matchCategory && matchSearch;
+  });
 
   const handleAddOption = () => {
     if (options.length >= 5) {
@@ -52,7 +78,13 @@ const CreatePage: React.FC = () => {
   };
 
   const handleSelectTemplate = (template: any) => {
-    const templateOptions: OptionForm[] = template.options.map((opt: string) => ({
+    setPreviewTemplate(template);
+  };
+
+  const handleConfirmTemplate = () => {
+    if (!previewTemplate) return;
+
+    const templateOptions: OptionForm[] = previewTemplate.options.map((opt: string) => ({
       title: opt,
       pros: '',
       cons: ''
@@ -61,12 +93,20 @@ const CreatePage: React.FC = () => {
       ...templateOptions,
       { title: '', pros: '', cons: '' }
     ]);
-    useTemplate(template.id);
+
+    useTemplate(previewTemplate.id);
+
     setShowTemplateModal(false);
+    setPreviewTemplate(null);
+
     Taro.showToast({
       title: '模板已应用',
       icon: 'success'
     });
+  };
+
+  const handleCancelPreview = () => {
+    setPreviewTemplate(null);
   };
 
   const handleSave = () => {
@@ -249,35 +289,100 @@ const CreatePage: React.FC = () => {
         <View className={styles.modal}>
           <View className={styles.modalContent}>
             <Text className={styles.modalTitle}>📋 选择模板</Text>
-            <ScrollView className={styles.templateList} scrollY>
-              {templates.map(template => (
+
+            <View className={styles.searchBar}>
+              <Input
+                className={styles.searchInput}
+                value={searchValue}
+                onInput={e => setSearchValue(e.detail.value)}
+                placeholder="搜索模板..."
+                placeholderClass={styles.placeholder}
+              />
+            </View>
+
+            <View className={styles.categoryTabs}>
+              {CATEGORIES.map(cat => (
                 <View
-                  key={template.id}
-                  className={styles.templateItem}
-                  onClick={() => handleSelectTemplate(template)}
+                  key={cat}
+                  className={`${styles.categoryTab} ${selectedCategory === cat ? styles.categoryTabActive : ''}`}
+                  onClick={() => setSelectedCategory(cat)}
                 >
-                  <View className={styles.templateInfo}>
-                    <Text className={styles.templateName}>{template.title}</Text>
-                    <Text className={styles.templateDesc}>{template.description}</Text>
-                    <View className={styles.templateOptions}>
-                      {template.options.map((opt, index) => (
-                        <View key={index} className={styles.templateOption}>
-                          <Text className={styles.templateOptionText}>{opt}</Text>
-                        </View>
-                      ))}
-                    </View>
-                  </View>
-                  <View className={styles.templateUsage}>
-                    <Text className={styles.templateUsageText}>
-                      使用 {template.usageCount} 次
-                    </Text>
-                  </View>
+                  <Text className={`${styles.categoryTabText} ${selectedCategory === cat ? styles.categoryTabTextActive : ''}`}>
+                    {cat}
+                  </Text>
                 </View>
               ))}
-            </ScrollView>
+            </View>
+
+            {previewTemplate ? (
+              <View className={styles.previewContainer}>
+                <View className={styles.previewHeader}>
+                  <Text className={styles.previewTitle}>📝 {previewTemplate.title}</Text>
+                  <Text className={styles.previewDesc}>{previewTemplate.description}</Text>
+                </View>
+                <View className={styles.previewOptions}>
+                  <Text className={styles.previewLabel}>选项预览：</Text>
+                  {previewTemplate.options.map((opt: string, index: number) => (
+                    <View key={index} className={styles.previewOption}>
+                      <Text className={styles.previewOptionText}>{index + 1}. {opt}</Text>
+                    </View>
+                  ))}
+                </View>
+                <View className={styles.previewActions}>
+                  <View
+                    className={styles.previewCancelButton}
+                    onClick={handleCancelPreview}
+                  >
+                    <Text className={styles.previewCancelText}>取消</Text>
+                  </View>
+                  <View
+                    className={styles.previewConfirmButton}
+                    onClick={handleConfirmTemplate}
+                  >
+                    <Text className={styles.previewConfirmText}>确认带入</Text>
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <ScrollView className={styles.templateList} scrollY>
+                {filteredTemplates.map(template => (
+                  <View
+                    key={template.id}
+                    className={styles.templateItem}
+                    onClick={() => handleSelectTemplate(template)}
+                  >
+                    <View className={styles.templateInfo}>
+                      <View className={styles.templateTitleRow}>
+                        <Text className={styles.templateName}>{template.title}</Text>
+                        <View className={styles.templateCategory}>
+                          <Text className={styles.templateCategoryText}>{template.category}</Text>
+                        </View>
+                      </View>
+                      <Text className={styles.templateDesc}>{template.description}</Text>
+                      <View className={styles.templateOptions}>
+                        {template.options.map((opt: string, index: number) => (
+                          <View key={index} className={styles.templateOption}>
+                            <Text className={styles.templateOptionText}>{opt}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    </View>
+                    <View className={styles.templateUsage}>
+                      <Text className={styles.templateUsageText}>
+                        使用 {template.usageCount} 次
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+
             <View
               className={styles.modalCancelButton}
-              onClick={() => setShowTemplateModal(false)}
+              onClick={() => {
+                setShowTemplateModal(false);
+                setPreviewTemplate(null);
+              }}
             >
               <Text className={styles.modalCancelText}>关闭</Text>
             </View>

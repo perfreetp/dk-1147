@@ -33,6 +33,7 @@ export interface Decision {
   finalChoice?: string;
   satisfaction?: number;
   reportUrl?: string;
+  reflection?: string;
 }
 
 export interface Vote {
@@ -43,10 +44,39 @@ export interface Vote {
   isAnonymous: boolean;
 }
 
+export type TemplateCategory = '全部' | '生活' | '购物' | '出行' | '工作' | '其他';
+
 export interface Template {
   id: string;
   title: string;
   description: string;
   options: string[];
   usageCount: number;
+  category: TemplateCategory;
+}
+
+export interface ReportHistory {
+  id: string;
+  decisionId: string;
+  decisionTitle: string;
+  finalChoice: string;
+  voteCount: number;
+  voteResults: Record<string, number>;
+  scores: {
+    budget: number;
+    time: number;
+    mood: number;
+  };
+  satisfaction?: number;
+  reflection?: string;
+  trendSummary?: {
+    leader: string;
+    leaderVotes: number;
+    gap: number;
+    recentChanges: {
+      date: string;
+      changes: Record<string, number>;
+    }[];
+  };
+  createdAt: string;
 }

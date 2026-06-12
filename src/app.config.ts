@@ -5,7 +5,8 @@ export default defineAppConfig({
     'pages/square/index',
     'pages/record/index',
     'pages/result/index',
-    'pages/reflection/index'
+    'pages/reflection/index',
+    'pages/report-history/index'
   ],
   window: {
     backgroundTextStyle: 'light',

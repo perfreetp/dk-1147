@@ -285,7 +285,7 @@
   padding: $spacing-lg;
   width: 90%;
   max-width: 600rpx;
-  max-height: 70vh;
+  max-height: 80vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -299,6 +299,57 @@
   text-align: center;
   display: block;
   flex-shrink: 0;
+}
+
+.searchBar {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: 0 $spacing-md;
+  height: 72rpx;
+  margin-bottom: $spacing-md;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 100%;
+  height: 100%;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.categoryTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-md;
+  flex-shrink: 0;
+}
+
+.categoryTab {
+  @include button-reset;
+  padding: $spacing-xs $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-sm;
+  border: 2rpx solid transparent;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.categoryTabActive {
+  border-color: $color-primary;
+  background: rgba($color-primary, 0.1);
+}
+
+.categoryTabText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.categoryTabTextActive {
+  color: $color-primary;
+  font-weight: $font-weight-medium;
 }
 
 .templateList {
@@ -327,12 +378,28 @@
   margin-right: $spacing-md;
 }
 
+.templateTitleRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+}
+
 .templateName {
   font-size: $font-size-md;
   font-weight: $font-weight-semibold;
   color: $color-text-primary;
-  display: block;
-  margin-bottom: $spacing-xs;
+}
+
+.templateCategory {
+  background: rgba($color-primary, 0.1);
+  padding: 2rpx 8rpx;
+  border-radius: $radius-xs;
+}
+
+.templateCategoryText {
+  font-size: $font-size-xs;
+  color: $color-primary;
 }
 
 .templateDesc {
@@ -366,6 +433,95 @@
 .templateUsageText {
   font-size: $font-size-xs;
   color: $color-text-tertiary;
+}
+
+.previewContainer {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  max-height: 400rpx;
+}
+
+.previewHeader {
+  margin-bottom: $spacing-md;
+}
+
+.previewTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.previewDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+}
+
+.previewOptions {
+  margin-bottom: $spacing-md;
+}
+
+.previewLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.previewOption {
+  padding: $spacing-xs 0;
+}
+
+.previewOptionText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.previewActions {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.previewCancelButton {
+  @include button-reset;
+  @include flex-center;
+  flex: 1;
+  height: $button-height-md;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.previewCancelText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.previewConfirmButton {
+  @include button-reset;
+  @include flex-center;
+  flex: 1;
+  height: $button-height-md;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-button;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.previewConfirmText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
 }
 
 .modalCancelButton {

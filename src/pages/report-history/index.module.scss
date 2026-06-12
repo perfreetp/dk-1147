@@ -1,0 +1,321 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-lg;
+}
+
+.loading {
+  @include flex-center;
+  height: 400rpx;
+}
+
+.loadingText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.subTitle {
+  font-size: $font-size-lg;
+  color: rgba(255, 255, 255, 0.9);
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.date {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+  display: block;
+}
+
+.section {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: block;
+}
+
+.finalChoiceCard {
+  background: linear-gradient(135deg, rgba($color-success, 0.1) 0%, rgba($color-success, 0.05) 100%);
+  border: 2rpx solid rgba($color-success, 0.2);
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  text-align: center;
+}
+
+.finalChoiceTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-success;
+}
+
+.voteResults {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.totalVotes {
+  text-align: center;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.totalVotesNumber {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  display: block;
+}
+
+.totalVotesLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  display: block;
+}
+
+.voteList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.voteItem {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.voteItemHighlight {
+  background: rgba($color-primary, 0.05);
+  border: 2rpx solid rgba($color-primary, 0.2);
+}
+
+.voteItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.voteItemTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.voteItemVotes {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.voteBar {
+  height: 8rpx;
+  background: $color-border;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.voteProgress {
+  height: 100%;
+  background: linear-gradient(90deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: 4rpx;
+}
+
+.trendSummary {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.leaderCard {
+  background: linear-gradient(135deg, rgba($color-primary, 0.1) 0%, rgba($color-primary-light, 0.1) 100%);
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  text-align: center;
+  border: 2rpx solid rgba($color-primary, 0.2);
+}
+
+.leaderLabel {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.leaderTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.leaderVotes {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  display: block;
+}
+
+.leaderGap {
+  font-size: $font-size-sm;
+  color: $color-success;
+  font-weight: $font-weight-semibold;
+  display: block;
+  margin-top: $spacing-xs;
+}
+
+.recentChanges {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.recentChangesTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.changeItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  margin-bottom: $spacing-sm;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.changeDate {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  min-width: 140rpx;
+}
+
+.changeDetails {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.changeUp {
+  font-size: $font-size-sm;
+  color: $color-success;
+  font-weight: $font-weight-medium;
+}
+
+.changeDown {
+  font-size: $font-size-sm;
+  color: $color-error;
+  font-weight: $font-weight-medium;
+}
+
+.scoresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+}
+
+.scoreItem {
+  text-align: center;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.scoreLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.scoreValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.scoreStars {
+  display: flex;
+  justify-content: center;
+  gap: 2rpx;
+}
+
+.starFilled {
+  font-size: $font-size-md;
+  color: $color-warning;
+}
+
+.starEmpty {
+  font-size: $font-size-md;
+  color: $color-border;
+}
+
+.satisfactionDisplay {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.satisfactionStars {
+  display: flex;
+  gap: 4rpx;
+}
+
+.satisfactionText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.reflectionText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  line-height: $line-height-loose;
+}
+
+.footer {
+  text-align: center;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.footerText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
