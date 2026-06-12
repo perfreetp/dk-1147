@@ -309,6 +309,25 @@
   line-height: $line-height-loose;
 }
 
+.suggestionsList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.suggestionItem {
+  background: linear-gradient(135deg, rgba($color-primary, 0.05) 0%, rgba($color-primary-light, 0.05) 100%);
+  border-left: 4rpx solid $color-primary;
+  border-radius: 0 $radius-md $radius-md 0;
+  padding: $spacing-md;
+}
+
+.suggestionText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  line-height: $line-height-normal;
+}
+
 .footer {
   text-align: center;
   padding: $spacing-lg;

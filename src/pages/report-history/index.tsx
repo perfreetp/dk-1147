@@ -25,10 +25,10 @@ const ReportHistoryPage: React.FC = () => {
           const optionStats = foundDecision.options.map((opt: any) => {
             const votes = foundDecision.voteResults?.[opt.id] || 0;
             return { id: opt.id, title: opt.title, votes };
-          });
+          }).sort((a: any, b: any) => b.votes - a.votes);
           const maxVotes = Math.max(...optionStats.map((o: any) => o.votes));
           const leader = optionStats.find((o: any) => o.votes === maxVotes);
-          const secondPlace = optionStats.filter((o: any) => o.id !== leader?.id).sort((a: any, b: any) => b.votes - a.votes)[0];
+          const secondPlace = optionStats.filter((o: any) => o.id !== leader?.id)[0];
           const gap = leader && secondPlace ? leader.votes - secondPlace.votes : 0;
 
           const recentChanges: any[] = [];
@@ -38,10 +38,54 @@ const ReportHistoryPage: React.FC = () => {
               const changes: Record<string, number> = {};
               trends[i].votes.forEach((v: any) => {
                 const prev = trends[i - 1].votes.find((p: any) => p.optionId === v.optionId);
-                changes[v.optionId] = v.count - (prev?.count || 0);
+                changes[v.optionId] = Math.max(0, v.count - (prev?.count || 0));
               });
               recentChanges.push({ date: trends[i].date, changes });
             }
+          }
+
+          const suggestions: string[] = [];
+          if (selectedOpt && leader) {
+            if (selectedOpt.title === leader.title) {
+              suggestions.push('🎯 你的最终选择与投票结果一致，投票帮你确认了内心的想法');
+            } else if (gap > 5) {
+              suggestions.push('💡 你选择了投票结果不同的选项，坚持自己的想法也是一种勇气');
+            }
+          }
+
+          if (gap <= 2) {
+            suggestions.push('⚖️ 投票结果非常接近，这是一个艰难的抉择');
+          } else if (gap > 10) {
+            suggestions.push('📊 投票结果一边倒，某个选项明显更受欢迎');
+          }
+
+          const avgScore = (scores.budget + scores.time + scores.mood) / 3;
+          if (avgScore >= 4) {
+            suggestions.push('✨ 你对这次选择的各项评分都很高，是一个满意的选择');
+          } else if (avgScore <= 2) {
+            suggestions.push('🤔 多个维度的评分较低，下次决策可以考虑更周全');
+          }
+
+          if (scores.budget <= 2) {
+            suggestions.push('💰 预算匹配评分较低，下次决策要多考虑经济因素');
+          }
+          if (scores.time <= 2) {
+            suggestions.push('⏰ 时间成本评分较低，决策时需要评估时间投入');
+          }
+          if (scores.mood <= 2) {
+            suggestions.push('😊 心情匹配评分较低，以后要多关注自己的感受');
+          }
+
+          if (foundDecision.satisfaction && foundDecision.satisfaction >= 4) {
+            suggestions.push('🌟 整体满意度很高，这是一个成功的决策');
+          } else if (foundDecision.satisfaction && foundDecision.satisfaction <= 2) {
+            suggestions.push('📝 满意度不足，可以记录这次决策的得失供下次参考');
+          }
+
+          if (foundDecision.voteCount > 10 && gap <= 3) {
+            suggestions.push('🔍 高投票数下差距仍小，说明选项各有优势');
+          } else if (foundDecision.voteCount < 5) {
+            suggestions.push('👥 投票人数较少，结果可能不够有代表性');
           }
 
           foundReport = {
@@ -60,6 +104,7 @@ const ReportHistoryPage: React.FC = () => {
               gap,
               recentChanges
             },
+            suggestions,
             createdAt: new Date().toISOString()
           };
 
@@ -216,6 +261,19 @@ const ReportHistoryPage: React.FC = () => {
         <View className={styles.section}>
           <Text className={styles.sectionTitle}>💭 复盘感想</Text>
           <Text className={styles.reflectionText}>{report.reflection}</Text>
+        </View>
+      )}
+
+      {report.suggestions && report.suggestions.length > 0 && (
+        <View className={styles.section}>
+          <Text className={styles.sectionTitle}>💡 复盘建议</Text>
+          <View className={styles.suggestionsList}>
+            {report.suggestions.map((suggestion, index) => (
+              <View key={index} className={styles.suggestionItem}>
+                <Text className={styles.suggestionText}>{suggestion}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       )}
 

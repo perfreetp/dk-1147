@@ -78,5 +78,6 @@ export interface ReportHistory {
       changes: Record<string, number>;
     }[];
   };
+  suggestions?: string[];
   createdAt: string;
 }

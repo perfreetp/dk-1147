@@ -39,6 +39,7 @@ const CreatePage: React.FC = () => {
         ...templateOptions,
         { title: '', pros: '', cons: '' }
       ]);
+      useTemplate(pendingTemplate.id);
       clearPendingTemplate();
     }
   }, []);

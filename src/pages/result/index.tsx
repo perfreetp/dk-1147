@@ -96,6 +96,21 @@ const ResultPage: React.FC = () => {
       return;
     }
 
+    const optionsWithScores = decision.options.map((opt: any) => ({
+      ...opt,
+      score: optionScores[opt.id] || { budget: 3, time: 3, mood: 3 }
+    }));
+
+    updateDecision(decisionId, {
+      finalChoice: selectedOption,
+      status: 'ended',
+      options: optionsWithScores,
+      reflection: reflection,
+      satisfaction: satisfaction || undefined
+    });
+
+    setHasChanges(false);
+
     Taro.navigateTo({
       url: `/pages/report-history/index?id=${decisionId}`
     });
@@ -137,16 +152,20 @@ const ResultPage: React.FC = () => {
     const secondPlace = optionStats[1];
     const gap = leader && secondPlace ? leader.votes - secondPlace.votes : 0;
 
-    const recentTrends = decision.voteTrends.slice(-3).map(trend => {
+    const recentTrends = decision.voteTrends.slice(-3).map((trend, index) => {
       const changes: Record<string, number> = {};
-      trend.votes.forEach((v: any) => {
-        const prevTrend = decision.voteTrends.find((t: any) =>
-          t.date < trend.date && t.votes.find((p: any) => p.optionId === v.optionId)
-        );
-        const prev = prevTrend?.votes.find((p: any) => p.optionId === v.optionId);
-        changes[v.optionId] = prev ? v.count - prev.count : 0;
-      });
-      return { date: trend.date, votes: trend.votes, changes };
+      if (index > 0) {
+        const prevTrend = decision.voteTrends[index - 1];
+        trend.votes.forEach((v: any) => {
+          const prev = prevTrend.votes.find((p: any) => p.optionId === v.optionId);
+          changes[v.optionId] = Math.max(0, v.count - (prev?.count || 0));
+        });
+      } else {
+        trend.votes.forEach((v: any) => {
+          changes[v.optionId] = Math.max(0, v.count);
+        });
+      }
+      return { date: trend.date, changes };
     });
 
     return {
@@ -247,16 +266,16 @@ const ResultPage: React.FC = () => {
 
             {trendAnalysis.recentTrends.length > 0 && (
               <View className={styles.recentTrend}>
-                <Text className={styles.recentLabel}>📅 近期变化（每日增量）</Text>
+                <Text className={styles.recentLabel}>📅 每日新增票数</Text>
                 {trendAnalysis.recentTrends.map((trend: any, index: number) => (
                   <View key={index} className={styles.dayItem}>
                     <Text className={styles.dayDate}>{trend.date}</Text>
                     <View className={styles.dayVotes}>
-                      {trend.changes && Object.entries(trend.changes).map(([optionId, delta]: [string, any]) => {
+                      {Object.entries(trend.changes).map(([optionId, delta]: [string, any]) => {
                         const opt = decision.options?.find((o: any) => o.id === optionId);
                         return (
-                          <Text key={optionId} className={delta > 0 ? styles.changeUp : styles.changeDown}>
-                            {opt?.title}: {delta > 0 ? '+' : ''}{delta}
+                          <Text key={optionId} className={delta > 0 ? styles.changeUp : styles.changeNeutral}>
+                            {opt?.title}: +{delta}
                           </Text>
                         );
                       })}

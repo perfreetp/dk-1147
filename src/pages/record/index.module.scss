@@ -14,6 +14,24 @@
   box-shadow: $shadow-card;
 }
 
+.backButton {
+  @include button-reset;
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.backIcon {
+  font-size: $font-size-lg;
+  color: $color-text-white;
+  margin-right: $spacing-xs;
+}
+
+.backText {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .title {
   font-size: $font-size-xxl;
   font-weight: $font-weight-bold;
@@ -24,6 +42,156 @@
 .subTitle {
   font-size: $font-size-md;
   color: rgba(255, 255, 255, 0.9);
+}
+
+.reportFilters {
+  margin-bottom: $spacing-lg;
+}
+
+.reportSearchBar {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: 0 $spacing-md;
+  height: 72rpx;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.reportSearchInput {
+  width: 100%;
+  height: 100%;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.placeholder {
+  color: $color-text-tertiary;
+}
+
+.reportFilterTabs {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.filterTab {
+  @include button-reset;
+  flex: 1;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  border: 2rpx solid transparent;
+  box-shadow: $shadow-card;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.filterTabActive {
+  border-color: $color-primary;
+  background: rgba($color-primary, 0.1);
+}
+
+.filterTabText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+  text-align: center;
+}
+
+.filterTabTextActive {
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.reportList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.reportCard {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+}
+
+.reportTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  flex: 1;
+  margin-right: $spacing-sm;
+}
+
+.reportDate {
+  flex-shrink: 0;
+}
+
+.reportDateText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.reportSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.reportChoice {
+  display: flex;
+  align-items: center;
+}
+
+.reportChoiceLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.reportChoiceValue {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+}
+
+.reportStats {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.reportStatsText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.reportStatsDivider {
+  color: $color-border;
+}
+
+.reportAction {
+  border-top: 1rpx solid $color-divider;
+  padding-top: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.reportActionText {
+  font-size: $font-size-sm;
+  color: $color-primary;
 }
 
 .section {
@@ -61,6 +229,13 @@
   padding: $spacing-lg;
   box-shadow: $shadow-card;
   text-align: center;
+}
+
+.statCardClickable {
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
 }
 
 .statNumber {
@@ -349,4 +524,10 @@
 .emptyText {
   font-size: $font-size-md;
   color: $color-text-tertiary;
+}
+
+.emptySubText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xs;
 }
