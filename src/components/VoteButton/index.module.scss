@@ -1,0 +1,39 @@
+@use '@/styles/variables.scss' as *;
+
+.button {
+  @include button-reset;
+  height: $button-height-md;
+  background: $color-bg-card;
+  border: 2rpx solid $color-primary;
+  border-radius: $radius-button;
+  padding: 0 $spacing-xl;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.selected {
+  background: $color-primary;
+
+  .buttonText {
+    color: $color-text-white;
+  }
+}
+
+.disabled {
+  background: $color-bg-hover;
+  border-color: $color-border;
+
+  .buttonText {
+    color: $color-text-disabled;
+  }
+}
+
+.buttonText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+}

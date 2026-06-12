@@ -1,0 +1,175 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-lg;
+}
+
+.header {
+  margin-bottom: $spacing-lg;
+}
+
+.title {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  padding: 0 $spacing-md;
+  height: 80rpx;
+  box-shadow: $shadow-card;
+}
+
+.searchIcon {
+  font-size: 36rpx;
+  margin-right: $spacing-sm;
+}
+
+.searchInput {
+  flex: 1;
+  height: 100%;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.placeholder {
+  color: $color-text-tertiary;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.voteList {
+  margin-bottom: $spacing-lg;
+}
+
+.voteCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.voteHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-md;
+}
+
+.voteTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  flex: 1;
+  margin-right: $spacing-sm;
+}
+
+.voteCount {
+  background: rgba($color-primary, 0.1);
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+}
+
+.voteCountText {
+  font-size: $font-size-xs;
+  color: $color-primary;
+}
+
+.voteDescription {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-lg;
+  line-height: $line-height-normal;
+}
+
+.optionsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.optionItem {
+  background: $color-bg-page;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.optionSelected {
+  border-color: $color-primary;
+  background: rgba($color-primary, 0.05);
+}
+
+.optionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.optionMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.voteButton {
+  @include button-reset;
+  @include flex-center;
+  width: 100%;
+  height: $button-height-md;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-button;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.voteButton:disabled {
+  background: $color-bg-hover;
+  box-shadow: none;
+}
+
+.voteButtonText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.voteButton:disabled .voteButtonText {
+  color: $color-text-disabled;
+}
+
+.votedBadge {
+  @include flex-center;
+  height: $button-height-md;
+  background: rgba($color-success, 0.1);
+  border-radius: $radius-button;
+}
+
+.votedBadgeText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-success;
+}

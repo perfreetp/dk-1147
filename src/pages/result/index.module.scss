@@ -1,0 +1,293 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-lg;
+  padding-bottom: 180rpx;
+}
+
+.decisionInfo {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.description {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin-bottom: $spacing-md;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.metaText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.section {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+}
+
+.optionResult {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.optionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.optionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.optionVotes {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+}
+
+.voteBar {
+  height: 8rpx;
+  background: $color-border;
+  border-radius: 4rpx;
+  margin-bottom: $spacing-sm;
+  overflow: hidden;
+}
+
+.voteProgress {
+  height: 100%;
+  background: linear-gradient(90deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+.prosCons {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-sm;
+}
+
+.prosList,
+.consList {
+  flex: 1;
+}
+
+.prosTitle,
+.consTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-xs;
+}
+
+.prosTitle {
+  color: $color-success;
+}
+
+.consTitle {
+  color: $color-error;
+}
+
+.prosText,
+.consText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.scoreGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.scoreItem {
+  text-align: center;
+}
+
+.scoreLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+  display: block;
+}
+
+.scoreValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  display: block;
+}
+
+.decisionSection {
+  margin-bottom: $spacing-lg;
+}
+
+.decisionLabel {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+  display: block;
+}
+
+.decisionOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.decisionOption {
+  background: $color-bg-page;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  min-width: 200rpx;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.decisionOptionSelected {
+  border-color: $color-primary;
+  background: rgba($color-primary, 0.05);
+}
+
+.decisionOptionText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  text-align: center;
+  display: block;
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $spacing-lg;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.08);
+  z-index: 100;
+  display: flex;
+  gap: $spacing-md;
+}
+
+.actionButton {
+  @include button-reset;
+  @include flex-center;
+  flex: 1;
+  height: $button-height-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.reportButton {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+}
+
+.satisfactionButton {
+  background: $color-bg-page;
+  border: 2rpx solid $color-primary;
+  color: $color-primary;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  @include flex-center;
+}
+
+.modalContent {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  width: 90%;
+  max-width: 600rpx;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modalTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+  display: block;
+}
+
+.closeButton {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-md;
+  background: $color-bg-page;
+  border-radius: $radius-button;
+  margin-top: $spacing-md;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.closeButtonText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}

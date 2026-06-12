@@ -1,0 +1,245 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-lg;
+  padding-bottom: 180rpx;
+}
+
+.formCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.inputGroup {
+  margin-bottom: $spacing-lg;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  height: 88rpx;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: 0 $spacing-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 160rpx;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+}
+
+.placeholder {
+  color: $color-text-tertiary;
+}
+
+.optionsList {
+  margin-top: $spacing-md;
+}
+
+.optionCard {
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.optionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.optionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.removeOption {
+  @include button-reset;
+  @include flex-center;
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba($color-error, 0.1);
+  border-radius: $radius-sm;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.removeIcon {
+  font-size: 32rpx;
+  color: $color-error;
+}
+
+.optionInput {
+  width: 100%;
+  height: 80rpx;
+  background: $color-bg-card;
+  border-radius: $radius-sm;
+  padding: 0 $spacing-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+  margin-bottom: $spacing-sm;
+}
+
+.tagsInput {
+  width: 100%;
+  min-height: 80rpx;
+  background: $color-bg-card;
+  border-radius: $radius-sm;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+}
+
+.tagsHint {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xs;
+}
+
+.addOption {
+  @include button-reset;
+  @include flex-center;
+  width: 100%;
+  height: $button-height-md;
+  background: rgba($color-primary, 0.1);
+  border: 2rpx dashed $color-primary;
+  border-radius: $radius-md;
+  margin-top: $spacing-md;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.addOptionText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+}
+
+.settingsRow {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.settingItem {
+  flex: 1;
+}
+
+.datePicker {
+  width: 100%;
+  height: 88rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: 0 $spacing-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.settingLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+  display: block;
+}
+
+.switchRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 88rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: 0 $spacing-md;
+}
+
+.switchLabel {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.switchDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+  margin-top: $spacing-xs;
+}
+
+.publishSwitch {
+  transform: scale(0.8);
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $spacing-lg;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.saveButton {
+  @include button-reset;
+  @include flex-center;
+  width: 100%;
+  height: $button-height-lg;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-button;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.saveButtonText {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}

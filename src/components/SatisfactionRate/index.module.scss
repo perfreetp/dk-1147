@@ -1,0 +1,55 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+}
+
+.label {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.starsContainer {
+  display: flex;
+  justify-content: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.star {
+  @include flex-center;
+  width: 64rpx;
+  height: 64rpx;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.starFilled {
+  font-size: 56rpx;
+  color: $color-warning;
+  transition: transform $transition-base;
+
+  .star:active & {
+    transform: scale(1.2);
+  }
+}
+
+.starEmpty {
+  font-size: 56rpx;
+  color: $color-border;
+}
+
+.description {
+  display: block;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}

@@ -1,0 +1,167 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f0f5ff 0%, $color-bg-page 100%);
+  padding: $spacing-lg;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-satisfaction 0%, $color-primary-light 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.title {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.subTitle {
+  font-size: $font-size-md;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.section {
+  margin-bottom: $spacing-lg;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionMore {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.statCard {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  text-align: center;
+}
+
+.statNumber {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  display: block;
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+  margin-top: $spacing-xs;
+}
+
+.decisionList {
+  margin-bottom: $spacing-lg;
+}
+
+.templateList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.templateCard {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.templateHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+}
+
+.templateTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  flex: 1;
+  margin-right: $spacing-sm;
+}
+
+.templateCount {
+  background: rgba($color-satisfaction, 0.1);
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+}
+
+.templateCountText {
+  font-size: $font-size-xs;
+  color: $color-satisfaction;
+}
+
+.templateDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-sm;
+}
+
+.templateOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.templateOption {
+  background: $color-bg-page;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+}
+
+.templateOptionText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.emptyState {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-xl;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+}
+
+.emptyIcon {
+  font-size: 80rpx;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
